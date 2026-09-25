@@ -212,3 +212,11 @@ __marimo__/
 
 # Upstream template ignores every *.log. Keep this experiment's run logs.
 !artifacts/**/*.log
+
+# Single-source run outputs. STFT caches are about 118 MB each and exceed
+# GitHub's 100 MB limit; the paired checkpoints are about 3 GB.
+artifacts/five_seed_paired/
+artifacts/five_seed_full_lifecycle/
+artifacts/five_seed_feature_audit_20260925/
+artifacts/single_source_pairs_seed42/
+*.npy
