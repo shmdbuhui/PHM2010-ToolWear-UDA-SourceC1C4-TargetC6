@@ -234,3 +234,41 @@ python train.py \
 - dsym2894@yonsei.ac.kr
 
 
+
+### Frozen ResNet OOR-PGA exploratory comparison
+
+[run_resnet_oor_pga_postprocess.py](run_resnet_oor_pga_postprocess.py) reuses
+six-direction, five-seed source-only and DARE-GRAM predictions from the
+full-lifecycle evaluation. It does not train or change either checkpoint.
+It adapts two distinct mechanisms from the separate EEMD project:
+
+- `oor_pga`: the first fully open out-of-support gate after cut 1 starts a
+  multiplicative source-fit power-law factor `(tau/t_oor)**m`.
+- `oor_pga_like`: the source-fit linear wear increment is accumulated with
+  the unlabeled target OOR gate and a fixed coefficient of 0.75.
+- `late_oor_pga_like`: an **exploratory** variant that only accumulates from
+  normalized lifecycle 0.70 onward. Its timing was motivated by previously
+  observed target-stage errors; it is not an independently validated setting.
+
+The original EEMD detector uses 43 selected tabular features. This experiment
+uses 48 fixed summaries of the cached STFT (six channels times eight frequency
+bands); the source min/max support and gate are refitted for each source tool.
+The carried-over TL=3/43 and TH=6/43 are exploratory ratios, not thresholds
+validated for the new feature space. Source labels alone fit the wear trend;
+the target's entire 315-cut STFT is unlabeled input to the gate. Target labels
+are read only after all corrected predictions have been saved.
+
+Run the existing full-lifecycle evaluation first, then:
+
+```powershell
+.\.venv\Scripts\python.exe evaluate_full_lifecycle.py --trained-root .\artifacts\five_seed_paired --out-root .\artifacts\five_seed_full_lifecycle --raw-root E:\QLP\source\source_mill --device cuda
+.\.venv\Scripts\python.exe run_resnet_oor_pga_postprocess.py --trained-root .\artifacts\five_seed_paired --prediction-root .\artifacts\five_seed_full_lifecycle --raw-root E:\QLP\source\source_mill --out-root .\artifacts\resnet_oor_pga_postprocess
+```
+
+If the full-lifecycle output already exists, run only the second command. The
+new output directory must not exist. It contains frozen prediction CSVs without
+target labels, evaluated CSVs, paired per-seed and summary metrics, gate plots,
+and source/checkpoint provenance checks. C6 has separate full 1–315 and original
+95–315 metrics. Compare all six directions and early/middle/late cuts before
+claiming improvement. These postprocessing choices were motivated by prior
+inspection of target errors and should be described as exploratory.
