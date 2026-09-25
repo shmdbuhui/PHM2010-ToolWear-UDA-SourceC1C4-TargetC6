@@ -1,0 +1,10 @@
+{
+  "norm_method": "zscore",
+  "source": "c1",
+  "target": "c4",
+  "seed": 46,
+  "methods": [
+    "source_only",
+    "daregram"
+  ]
+}

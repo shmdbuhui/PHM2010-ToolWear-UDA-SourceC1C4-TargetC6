@@ -1,0 +1,10 @@
+{
+  "norm_method": "minmax",
+  "source": "c1",
+  "target": "c6",
+  "seed": 46,
+  "methods": [
+    "source_only",
+    "daregram"
+  ]
+}

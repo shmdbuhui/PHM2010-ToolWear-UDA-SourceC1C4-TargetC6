@@ -220,3 +220,6 @@ artifacts/five_seed_full_lifecycle/
 artifacts/five_seed_feature_audit_20260925/
 artifacts/single_source_pairs_seed42/
 *.npy
+
+# Z-score vs Min-Max checkpoints: 120 files, about 43 MB each (~5 GB).
+artifacts/norm_comparison_20260925/**/*.pth
