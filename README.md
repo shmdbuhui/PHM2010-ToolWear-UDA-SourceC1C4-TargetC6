@@ -157,6 +157,30 @@ saved final checkpoints, and produced predictions. Source-only uses no target
 inputs during training. These runs use raw signal CSVs, not target NPZ archives
 that also contain labels. The earlier C1+C4->C6 scripts and artifacts are kept.
 
+### Full cut 1–315 Z-score analysis scripts
+
+The newer six-direction, five-seed protocol evaluates **all** target tools on
+cut 1–315, including C6. Its scripts are versioned here, while the raw PHM2010
+data, STFT caches, checkpoints, per-cut predictions, figures, and generated
+audit directories remain local and are ignored by Git.
+
+- `run_full_1_315_baseline_protocol.py` audits the fixed source-only and
+  DARE-GRAM checkpoints and produces the common full-range baseline.
+- `run_adabn_zscore.py` and `summarize_adabn_zscore.py` run and summarize the
+  AdaBN control without changing the saved base checkpoints.
+- `run_oor_pga_full_1_315.py` and
+  `run_early_reference_persistent_oor_pga.py` apply the two frozen-prediction
+  OOR-PGA postprocessors.
+- `diagnose_oor_pga_factors.py` separates the original factor, factor cap,
+  delayed trigger, and full new gate. Run its `prepare` phase before its
+  `evaluate` phase so counterfactual predictions are frozen before target
+  labels are read.
+- The `analyze_*`, `audit_*`, `diagnose_five_seed_*`, `reconcile_*`, and
+  `report_*` scripts produce the supporting diagnostics and reports.
+
+These scripts require the corresponding local experiment inputs and outputs;
+the repository does not contain the PHM2010 measurements or trained models.
+
 ### Data Preprocessing
 
 ```bash

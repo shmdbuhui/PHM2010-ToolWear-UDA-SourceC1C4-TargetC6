@@ -223,3 +223,20 @@ artifacts/single_source_pairs_seed42/
 
 # Z-score vs Min-Max checkpoints: 120 files, about 43 MB each (~5 GB).
 artifacts/norm_comparison_20260925/**/*.pth
+
+# Local PHM2010 inputs and newly generated experiment outputs.
+# Keep analysis scripts in Git; regenerate these data, predictions, figures,
+# audit manifests, and checkpoints locally.
+dataset/
+*.pth
+*.pt
+*.ckpt
+artifacts/adabn_zscore_20260925/
+artifacts/c1c6_metric_reconciliation_20260925/
+artifacts/early_reference_persistent_oor_pga_full_1_315_20260925/
+artifacts/five_seed_feature_distribution_20260925/
+artifacts/full_1_315_baseline_zscore_20260925/
+artifacts/late_underestimation_extrapolation_zscore_20260925/
+artifacts/oor_pga_factor_diagnosis_full_1_315_20260925/
+artifacts/oor_pga_full_1_315_zscore_20260925/
+artifacts/stage_error_analysis_zscore_20260925/
