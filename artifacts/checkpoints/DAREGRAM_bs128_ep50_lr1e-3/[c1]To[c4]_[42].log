@@ -1,0 +1,236 @@
+09-24 20:52:10 ==== Runtime Args ====
+09-24 20:52:10 model_name: DAREGRAM
+09-24 20:52:10 source: c1
+09-24 20:52:10 target: c4
+09-24 20:52:10 data_dir: .\dataset
+09-24 20:52:10 cuda_device: cpu
+09-24 20:52:10 save_dir: .\artifacts\checkpoints\DAREGRAM_bs128_ep50_lr1e-3
+09-24 20:52:10 max_epoch: 50
+09-24 20:52:10 batch_size: 128
+09-24 20:52:10 num_workers: 0
+09-24 20:52:10 random_state: 42
+09-24 20:52:10 normlizetype: None
+09-24 20:52:10 opt: adam
+09-24 20:52:10 lr: 0.001
+09-24 20:52:10 momentum: 0.9
+09-24 20:52:10 betas: (0.9, 0.999)
+09-24 20:52:10 weight_decay: 1e-05
+09-24 20:52:10 lr_scheduler: fix
+09-24 20:52:10 gamma: 0.2
+09-24 20:52:10 steps: 20
+09-24 20:52:10 tradeoff: ['exp']
+09-24 20:52:10 dropout: 0.2
+09-24 20:52:10 grad_clip: 1.0
+09-24 20:52:10 save: True
+09-24 20:52:10 load_path: 
+09-24 20:52:10 tsne: False
+09-24 20:52:10 source_condition: c1
+09-24 20:52:10 target_condition: c4
+09-24 20:52:10 save_path: .\artifacts\checkpoints\DAREGRAM_bs128_ep50_lr1e-3\[c1]To[c4]_[42]
+09-24 20:52:12 using cpu
+09-24 20:52:13 source training set: 315
+09-24 20:52:14 target unlabeled set: 315
+09-24 20:52:14 target test set: 315
+09-24 20:52:14 -----Epoch 1/50-----
+09-24 20:52:23 Train-Total Loss: 12159.6680
+09-24 20:52:23 Train-Regressor(MSE): 12159.6680
+09-24 20:52:23 Train-DARE-GRAM Loss: 1.9092
+09-24 20:52:23 -----Epoch 2/50-----
+09-24 20:52:32 Train-Total Loss: 11072.0464
+09-24 20:52:32 Train-Regressor(MSE): 11070.9546
+09-24 20:52:32 Train-DARE-GRAM Loss: 10.7382
+09-24 20:52:32 -----Epoch 3/50-----
+09-24 20:52:40 Train-Total Loss: 9869.1733
+09-24 20:52:40 Train-Regressor(MSE): 9862.1709
+09-24 20:52:40 Train-DARE-GRAM Loss: 34.7870
+09-24 20:52:40 -----Epoch 4/50-----
+09-24 20:52:49 Train-Total Loss: 8501.1362
+09-24 20:52:49 Train-Regressor(MSE): 8496.3877
+09-24 20:52:49 Train-DARE-GRAM Loss: 15.9927
+09-24 20:52:49 -----Epoch 5/50-----
+09-24 20:52:57 Train-Total Loss: 6917.2729
+09-24 20:52:57 Train-Regressor(MSE): 6905.3201
+09-24 20:52:57 Train-DARE-GRAM Loss: 30.8931
+09-24 20:52:57 -----Epoch 6/50-----
+09-24 20:53:06 Train-Total Loss: 5441.6074
+09-24 20:53:06 Train-Regressor(MSE): 5420.8438
+09-24 20:53:06 Train-DARE-GRAM Loss: 44.1684
+09-24 20:53:06 -----Epoch 7/50-----
+09-24 20:53:14 Train-Total Loss: 3976.9299
+09-24 20:53:14 Train-Regressor(MSE): 3959.8203
+09-24 20:53:14 Train-DARE-GRAM Loss: 31.3533
+09-24 20:53:14 -----Epoch 8/50-----
+09-24 20:53:22 Train-Total Loss: 2733.1552
+09-24 20:53:22 Train-Regressor(MSE): 2714.2465
+09-24 20:53:22 Train-DARE-GRAM Loss: 30.8281
+09-24 20:53:22 -----Epoch 9/50-----
+09-24 20:53:31 Train-Total Loss: 1584.8237
+09-24 20:53:31 Train-Regressor(MSE): 1559.8030
+09-24 20:53:31 Train-DARE-GRAM Loss: 37.1741
+09-24 20:53:31 -----Epoch 10/50-----
+09-24 20:53:39 Train-Total Loss: 681.6836
+09-24 20:53:39 Train-Regressor(MSE): 668.6830
+09-24 20:53:39 Train-DARE-GRAM Loss: 17.9287
+09-24 20:53:39 -----Epoch 11/50-----
+09-24 20:53:47 Train-Total Loss: 326.7228
+09-24 20:53:47 Train-Regressor(MSE): 287.5250
+09-24 20:53:47 Train-DARE-GRAM Loss: 50.9040
+09-24 20:53:47 -----Epoch 12/50-----
+09-24 20:53:55 Train-Total Loss: 94.4350
+09-24 20:53:55 Train-Regressor(MSE): 74.0463
+09-24 20:53:55 Train-DARE-GRAM Loss: 25.2205
+09-24 20:53:55 -----Epoch 13/50-----
+09-24 20:54:04 Train-Total Loss: 145.8273
+09-24 20:54:04 Train-Regressor(MSE): 114.2183
+09-24 20:54:04 Train-DARE-GRAM Loss: 37.5862
+09-24 20:54:04 -----Epoch 14/50-----
+09-24 20:54:13 Train-Total Loss: 256.9787
+09-24 20:54:13 Train-Regressor(MSE): 249.3594
+09-24 20:54:13 Train-DARE-GRAM Loss: 8.7739
+09-24 20:54:13 -----Epoch 15/50-----
+09-24 20:54:22 Train-Total Loss: 267.7990
+09-24 20:54:22 Train-Regressor(MSE): 262.6657
+09-24 20:54:22 Train-DARE-GRAM Loss: 5.7589
+09-24 20:54:22 -----Epoch 16/50-----
+09-24 20:54:30 Train-Total Loss: 103.2227
+09-24 20:54:30 Train-Regressor(MSE): 100.1598
+09-24 20:54:30 Train-DARE-GRAM Loss: 3.3639
+09-24 20:54:30 -----Epoch 17/50-----
+09-24 20:54:38 Train-Total Loss: 64.7637
+09-24 20:54:38 Train-Regressor(MSE): 64.4617
+09-24 20:54:38 Train-DARE-GRAM Loss: 0.3260
+09-24 20:54:38 -----Epoch 18/50-----
+09-24 20:54:47 Train-Total Loss: 56.5053
+09-24 20:54:47 Train-Regressor(MSE): 55.6217
+09-24 20:54:47 Train-DARE-GRAM Loss: 0.9404
+09-24 20:54:47 -----Epoch 19/50-----
+09-24 20:54:55 Train-Total Loss: 87.0694
+09-24 20:54:55 Train-Regressor(MSE): 83.1778
+09-24 20:54:55 Train-DARE-GRAM Loss: 4.0943
+09-24 20:54:55 -----Epoch 20/50-----
+09-24 20:55:03 Train-Total Loss: 53.7247
+09-24 20:55:03 Train-Regressor(MSE): 51.9981
+09-24 20:55:03 Train-DARE-GRAM Loss: 1.7996
+09-24 20:55:03 -----Epoch 21/50-----
+09-24 20:55:12 Train-Total Loss: 56.7045
+09-24 20:55:12 Train-Regressor(MSE): 55.0827
+09-24 20:55:12 Train-DARE-GRAM Loss: 1.6775
+09-24 20:55:12 -----Epoch 22/50-----
+09-24 20:55:20 Train-Total Loss: 47.3248
+09-24 20:55:20 Train-Regressor(MSE): 46.3785
+09-24 20:55:20 Train-DARE-GRAM Loss: 0.9728
+09-24 20:55:20 -----Epoch 23/50-----
+09-24 20:55:28 Train-Total Loss: 36.2950
+09-24 20:55:28 Train-Regressor(MSE): 34.6346
+09-24 20:55:28 Train-DARE-GRAM Loss: 1.6981
+09-24 20:55:28 -----Epoch 24/50-----
+09-24 20:55:37 Train-Total Loss: 35.1499
+09-24 20:55:37 Train-Regressor(MSE): 34.4217
+09-24 20:55:37 Train-DARE-GRAM Loss: 0.7416
+09-24 20:55:37 -----Epoch 25/50-----
+09-24 20:55:45 Train-Total Loss: 35.2378
+09-24 20:55:45 Train-Regressor(MSE): 33.2112
+09-24 20:55:45 Train-DARE-GRAM Loss: 2.0571
+09-24 20:55:45 -----Epoch 26/50-----
+09-24 20:55:53 Train-Total Loss: 48.7030
+09-24 20:55:53 Train-Regressor(MSE): 47.1335
+09-24 20:55:53 Train-DARE-GRAM Loss: 1.5887
+09-24 20:55:53 -----Epoch 27/50-----
+09-24 20:56:02 Train-Total Loss: 38.5200
+09-24 20:56:02 Train-Regressor(MSE): 37.7477
+09-24 20:56:02 Train-DARE-GRAM Loss: 0.7800
+09-24 20:56:02 -----Epoch 28/50-----
+09-24 20:56:10 Train-Total Loss: 37.4515
+09-24 20:56:10 Train-Regressor(MSE): 36.8570
+09-24 20:56:10 Train-DARE-GRAM Loss: 0.5993
+09-24 20:56:10 -----Epoch 29/50-----
+09-24 20:56:18 Train-Total Loss: 37.1315
+09-24 20:56:18 Train-Regressor(MSE): 36.7842
+09-24 20:56:18 Train-DARE-GRAM Loss: 0.3496
+09-24 20:56:18 -----Epoch 30/50-----
+09-24 20:56:26 Train-Total Loss: 37.9065
+09-24 20:56:26 Train-Regressor(MSE): 37.5547
+09-24 20:56:26 Train-DARE-GRAM Loss: 0.3536
+09-24 20:56:26 -----Epoch 31/50-----
+09-24 20:56:33 Train-Total Loss: 32.0088
+09-24 20:56:33 Train-Regressor(MSE): 31.3651
+09-24 20:56:33 Train-DARE-GRAM Loss: 0.6465
+09-24 20:56:33 -----Epoch 32/50-----
+09-24 20:56:41 Train-Total Loss: 33.8722
+09-24 20:56:41 Train-Regressor(MSE): 33.1486
+09-24 20:56:41 Train-DARE-GRAM Loss: 0.7261
+09-24 20:56:41 -----Epoch 33/50-----
+09-24 20:56:49 Train-Total Loss: 37.4744
+09-24 20:56:49 Train-Regressor(MSE): 36.3651
+09-24 20:56:49 Train-DARE-GRAM Loss: 1.1125
+09-24 20:56:49 -----Epoch 34/50-----
+09-24 20:56:56 Train-Total Loss: 32.9821
+09-24 20:56:56 Train-Regressor(MSE): 32.4372
+09-24 20:56:56 Train-DARE-GRAM Loss: 0.5462
+09-24 20:56:56 -----Epoch 35/50-----
+09-24 20:57:04 Train-Total Loss: 42.7404
+09-24 20:57:04 Train-Regressor(MSE): 42.0655
+09-24 20:57:04 Train-DARE-GRAM Loss: 0.6761
+09-24 20:57:04 -----Epoch 36/50-----
+09-24 20:57:12 Train-Total Loss: 30.7161
+09-24 20:57:12 Train-Regressor(MSE): 30.3175
+09-24 20:57:12 Train-DARE-GRAM Loss: 0.3992
+09-24 20:57:12 -----Epoch 37/50-----
+09-24 20:57:20 Train-Total Loss: 27.5010
+09-24 20:57:20 Train-Regressor(MSE): 26.4888
+09-24 20:57:20 Train-DARE-GRAM Loss: 1.0135
+09-24 20:57:20 -----Epoch 38/50-----
+09-24 20:57:27 Train-Total Loss: 42.4853
+09-24 20:57:27 Train-Regressor(MSE): 41.3789
+09-24 20:57:27 Train-DARE-GRAM Loss: 1.1075
+09-24 20:57:27 -----Epoch 39/50-----
+09-24 20:57:35 Train-Total Loss: 28.5871
+09-24 20:57:35 Train-Regressor(MSE): 28.0773
+09-24 20:57:35 Train-DARE-GRAM Loss: 0.5102
+09-24 20:57:35 -----Epoch 40/50-----
+09-24 20:57:43 Train-Total Loss: 27.9465
+09-24 20:57:43 Train-Regressor(MSE): 27.8086
+09-24 20:57:43 Train-DARE-GRAM Loss: 0.1381
+09-24 20:57:43 -----Epoch 41/50-----
+09-24 20:57:50 Train-Total Loss: 34.7178
+09-24 20:57:50 Train-Regressor(MSE): 34.1772
+09-24 20:57:50 Train-DARE-GRAM Loss: 0.5410
+09-24 20:57:50 -----Epoch 42/50-----
+09-24 20:57:58 Train-Total Loss: 30.2177
+09-24 20:57:58 Train-Regressor(MSE): 29.9448
+09-24 20:57:58 Train-DARE-GRAM Loss: 0.2730
+09-24 20:57:58 -----Epoch 43/50-----
+09-24 20:58:06 Train-Total Loss: 31.3273
+09-24 20:58:06 Train-Regressor(MSE): 30.7380
+09-24 20:58:06 Train-DARE-GRAM Loss: 0.5895
+09-24 20:58:06 -----Epoch 44/50-----
+09-24 20:58:14 Train-Total Loss: 31.1291
+09-24 20:58:14 Train-Regressor(MSE): 30.4626
+09-24 20:58:14 Train-DARE-GRAM Loss: 0.6667
+09-24 20:58:14 -----Epoch 45/50-----
+09-24 20:58:21 Train-Total Loss: 32.1084
+09-24 20:58:21 Train-Regressor(MSE): 31.7510
+09-24 20:58:21 Train-DARE-GRAM Loss: 0.3575
+09-24 20:58:21 -----Epoch 46/50-----
+09-24 20:58:29 Train-Total Loss: 29.4595
+09-24 20:58:29 Train-Regressor(MSE): 28.8405
+09-24 20:58:29 Train-DARE-GRAM Loss: 0.6191
+09-24 20:58:29 -----Epoch 47/50-----
+09-24 20:58:37 Train-Total Loss: 33.4549
+09-24 20:58:37 Train-Regressor(MSE): 32.8494
+09-24 20:58:37 Train-DARE-GRAM Loss: 0.6056
+09-24 20:58:37 -----Epoch 48/50-----
+09-24 20:58:44 Train-Total Loss: 29.8526
+09-24 20:58:44 Train-Regressor(MSE): 29.4472
+09-24 20:58:44 Train-DARE-GRAM Loss: 0.4054
+09-24 20:58:44 -----Epoch 49/50-----
+09-24 20:58:52 Train-Total Loss: 32.1439
+09-24 20:58:52 Train-Regressor(MSE): 31.9767
+09-24 20:58:52 Train-DARE-GRAM Loss: 0.1672
+09-24 20:58:52 -----Epoch 50/50-----
+09-24 20:58:59 Train-Total Loss: 39.7907
+09-24 20:58:59 Train-Regressor(MSE): 39.5992
+09-24 20:58:59 Train-DARE-GRAM Loss: 0.1916
+09-24 20:59:01 [Target test] MAE=14.194, RMSE=17.505, R²=0.787, MAPE=14.79%
+09-24 20:59:01 Saved visualization: visualization\DAREGRAM\c1_tgt-c4.png
+09-24 20:59:01 Model saved to .\artifacts\checkpoints\DAREGRAM_bs128_ep50_lr1e-3\[c1]To[c4]_[42].pth

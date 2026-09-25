@@ -18,14 +18,14 @@ dataset/
  ├── c1/
  │    ├── c1_wear.csv          # Tool wear labels
  │    └── c1/                  # Sensor data
- │         ├── c1_001.csv
- │         ├── c1_002.csv
+ │         ├── c_1_001.csv
+ │         ├── c_1_002.csv
  │         ├── ...
- │         └── c1_315.csv
+ │         └── c_1_315.csv
  ├── c4/
  │    ├── c4_wear.csv
  │    └── c4/
- │         ├── c4_001.csv
+ │         ├── c_4_001.csv
  │         ├── ...
  └── c6/
       ├── c6_wear.csv

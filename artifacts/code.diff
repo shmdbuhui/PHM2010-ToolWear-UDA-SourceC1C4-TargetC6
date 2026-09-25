@@ -1,0 +1,124 @@
+diff --git a/README.md b/README.md
+index 68629bf..cb48a05 100644
+--- a/README.md
++++ b/README.md
+@@ -18,14 +18,14 @@ dataset/
+  ├── c1/
+  │    ├── c1_wear.csv          # Tool wear labels
+  │    └── c1/                  # Sensor data
+- │         ├── c1_001.csv
+- │         ├── c1_002.csv
++ │         ├── c_1_001.csv
++ │         ├── c_1_002.csv
+  │         ├── ...
+- │         └── c1_315.csv
++ │         └── c_1_315.csv
+  ├── c4/
+  │    ├── c4_wear.csv
+  │    └── c4/
+- │         ├── c4_001.csv
++ │         ├── c_4_001.csv
+  │         ├── ...
+  └── c6/
+       ├── c6_wear.csv
+diff --git a/data_sampling.py b/data_sampling.py
+index b605852..c238af2 100644
+--- a/data_sampling.py
++++ b/data_sampling.py
+@@ -100,8 +100,10 @@ def _stft_crop_and_resize(
+ 
+ 
+ def _collect_pass_list(root: str, condition: str, wear_map: dict):
+-    cid = condition[1:]
+-    pass_dir = os.path.join(root, condition, condition)
++    cid = condition[1:]
++    pass_dir = os.path.join(root, condition, condition)
++    if not os.path.isdir(pass_dir):
++        pass_dir = os.path.join(root, condition)
+     files = sorted(glob.glob(os.path.join(pass_dir, f"c_{cid}_*.csv")))
+ 
+     items = []
+@@ -132,7 +134,9 @@ def build_and_save(
+     for cond in conditions:
+         print(f"\n===== CONDITION {cond} =====")
+ 
+-        wear_path = os.path.join(root, cond, f"{cond}_wear.csv")
++        wear_path = os.path.join(root, cond, f"{cond}_wear.csv")
++        if not os.path.exists(wear_path):
++            wear_path = os.path.join(root, f"{cond}_wear.csv")
+         wear_df = _load_wear_mean(wear_path)
+         wear_map = dict(zip(wear_df['pass'], wear_df['VB']))
+         print(f"[INFO] wear entries: {len(wear_map)}")
+diff --git a/models/DAREGRAM.py b/models/DAREGRAM.py
+index 2288774..c8a92fa 100644
+--- a/models/DAREGRAM.py
++++ b/models/DAREGRAM.py
+@@ -181,7 +181,10 @@ class Trainset(InitTrain):
+                 save_dir = os.path.join("visualization", args.model_name)
+                 os.makedirs(save_dir, exist_ok=True)
+ 
+-                passes = np.arange(len(y_true))
++                passes = np.arange(1, len(y_true) + 1)
++                np.savetxt(os.path.join(save_dir, f"{args.source_condition}_tgt-{args.target_condition}.csv"),
++                           np.column_stack((passes, y_true, y_pred)), delimiter=",",
++                           header="cut,y_true,y_pred", comments="")
+                 plt.figure(figsize=(7, 4))
+                 plt.plot(passes, y_true, label="True VB", linewidth=2)
+                 plt.plot(passes, y_pred, label="Predicted VB", linestyle="--", linewidth=2)
+diff --git a/models/resnet.py b/models/resnet.py
+index 6057db1..ddb0ce3 100644
+--- a/models/resnet.py
++++ b/models/resnet.py
+@@ -107,7 +107,10 @@ class Trainset(InitTrain):
+                 save_dir = os.path.join("visualization", args.model_name)
+                 os.makedirs(save_dir, exist_ok=True)
+ 
+-                passes = np.arange(len(y_true))
++                passes = np.arange(1, len(y_true) + 1)
++                np.savetxt(os.path.join(save_dir, f"{args.source_condition}_tgt-{args.target_condition}.csv"),
++                           np.column_stack((passes, y_true, y_pred)), delimiter=",",
++                           header="cut,y_true,y_pred", comments="")
+                 plt.figure(figsize=(7, 4))
+                 plt.plot(passes, y_true, label="True VB", linewidth=2)
+                 plt.plot(passes, y_pred, label="Predicted VB", linestyle="--", linewidth=2)
+diff --git a/opt.py b/opt.py
+index ff4f38c..6dbeae4 100644
+--- a/opt.py
++++ b/opt.py
+@@ -42,7 +42,7 @@ def parse_args():
+     parser.add_argument('--dropout', type=float, default=0.2, help='Dropout layer coefficient')
+     parser.add_argument('--grad_clip', type=float, default=1.0, help='Gradient clipping threshold (0 to disable)')
+     
+-    parser.add_argument('--save', type=bool, default=False, help='Save logs and trained model checkpoints')
++    parser.add_argument('--save', action='store_true', help='Save logs and trained model checkpoints')
+ 
+     parser.add_argument('--load_path', type=str, default='')
+ 
+@@ -50,4 +50,3 @@ def parse_args():
+     
+     args = parser.parse_args()
+     return args
+-    
+\ No newline at end of file
+diff --git a/train_utils.py b/train_utils.py
+index e9491eb..9795a04 100644
+--- a/train_utils.py
++++ b/train_utils.py
+@@ -13,7 +13,7 @@ class InitTrain(object):
+ 
+     def __init__(self, args):
+         self.args = args
+-        if args.cuda_device:
++        if args.cuda_device not in ('', 'cpu') and torch.cuda.is_available():
+             self.device = torch.device("cuda:" + args.cuda_device)
+             logging.info('using {} / {} gpus'.format(len(args.cuda_device.split(',')), torch.cuda.device_count()))
+         else:
+@@ -135,7 +135,7 @@ class InitTrain(object):
+         args = self.args
+         self.datasets = {}
+ 
+-        npz_dir   = getattr(args, "npz_dir", "dataset")
++        npz_dir   = args.data_dir
+         norm_type = getattr(args, "norm_type", "zscore")
+ 
+         # ----- SOURCE (train) -----

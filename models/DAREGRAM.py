@@ -10,6 +10,7 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 import os
 import matplotlib.pyplot as plt
 import torch.nn as nn
+import hashlib
 from networks.resnet import ResNet18
 class Trainset(InitTrain):
     
@@ -22,6 +23,12 @@ class Trainset(InitTrain):
             nn.Dropout(0.2),
             nn.Linear(256,1)
         ).to(self.device)
+        digest = hashlib.sha256()
+        for module in (self.feature_extractor, self.regressor):
+            for name, tensor in sorted(module.state_dict().items()):
+                digest.update(name.encode('utf-8'))
+                digest.update(tensor.detach().cpu().numpy().tobytes())
+        logging.info(f'Initial model SHA256: {digest.hexdigest()}')
         self._init_data()
 
     # ==================== DAR-RSD LOSS ====================
@@ -100,17 +107,21 @@ class Trainset(InitTrain):
             epoch_loss = defaultdict(float)
             tradeoff = self._get_tradeoff(args.tradeoff, epoch)
             num_iter = len(self.dataloaders['source_train'])               
+            source_order_hash = hashlib.sha256()
+            target_order_hash = hashlib.sha256()
 
-            for _ in tqdm(range(num_iter), ascii=True):
+            for batch_idx in tqdm(range(num_iter), ascii=True):
                 # source / target batch
                 source_data, source_labels = utils.get_next_batch(
                     self.dataloaders, self.iters, 'source_train', self.device
                 )
                 source_labels = source_labels.float().unsqueeze(1)  # (B,1)
 
-                target_data, target_labels = utils.get_next_batch(
+                target_data, _ = utils.get_next_batch(
                     self.dataloaders, self.iters, 'target_unlabeled', self.device
                 )
+                source_order_hash.update(source_data.detach().cpu().numpy().tobytes())
+                target_order_hash.update(target_data.detach().cpu().numpy().tobytes())
 
                 # forwards
                 self.optimizer.zero_grad()
@@ -127,11 +138,20 @@ class Trainset(InitTrain):
                 loss_gram = self.DARE_GRAM_LOSS(feat_s, feat_t)
 
                 # total loss
-                loss = loss_c +  tradeoff[0] * loss_gram
+                alignment_term = args.align_scale * tradeoff[0] * loss_gram
+                loss = loss_c + alignment_term
+
+                if epoch == 2 and batch_idx == 0:
+                    grad_s, grad_t = torch.autograd.grad(
+                        alignment_term, (feat_s, feat_t), retain_graph=True
+                    )
+                    logging.info(f'Alignment gradient norm, source={grad_s.norm().item():.9g}, '
+                                 f'target={grad_t.norm().item():.9g}')
 
                 running_loss += loss.item()
                 epoch_loss['Regressor(MSE)'] += loss_c.item()
                 epoch_loss['DARE-GRAM'] += loss_gram.item()
+                epoch_loss['Weighted alignment'] += alignment_term.item()
 
                 # backward
                 loss.backward()
@@ -142,6 +162,11 @@ class Trainset(InitTrain):
             logging.info(f"Train-Total Loss: {running_loss/num_iter:.4f}")
             logging.info(f"Train-Regressor(MSE): {epoch_loss['Regressor(MSE)']/num_iter:.4f}")
             logging.info(f"Train-DARE-GRAM Loss: {epoch_loss['DARE-GRAM']/num_iter:.4f}")
+            logging.info(f"Train-Weighted Alignment: {epoch_loss['Weighted alignment']/num_iter:.6f}")
+            logging.info(f"Batch order SHA256: source={source_order_hash.hexdigest()} "
+                         f"target={target_order_hash.hexdigest()}")
+            logging.info(f"Backbone BN batches tracked: "
+                         f"{self.feature_extractor.backbone.bn1.num_batches_tracked.item()}")
 
             if self.lr_scheduler is not None:
                 self.lr_scheduler.step()
@@ -178,14 +203,18 @@ class Trainset(InitTrain):
             )
 
             if visualize:
-                save_dir = os.path.join("visualization", args.model_name)
+                save_dir = os.path.join("visualization", f"{args.model_name}_{args.run_tag}")
                 os.makedirs(save_dir, exist_ok=True)
 
-                passes = np.arange(len(y_true))
+                passes = np.arange(1, len(y_true) + 1)
+                file_stem = f"{args.source_condition}_tgt-{args.target_condition}_{args.run_tag}"
+                np.savetxt(os.path.join(save_dir, file_stem + ".csv"),
+                           np.column_stack((passes, y_true, y_pred)), delimiter=",",
+                           header="sample_index,y_true_vb,y_pred_vb", comments="")
                 plt.figure(figsize=(7, 4))
                 plt.plot(passes, y_true, label="True VB", linewidth=2)
                 plt.plot(passes, y_pred, label="Predicted VB", linestyle="--", linewidth=2)
-                plt.xlabel("Pass index")
+                plt.xlabel("Sample index")
                 plt.ylabel("Flank wear (VB)")  
                 plt.title(
                     f"Source={args.source_condition.upper()} → Target={args.target_condition.upper()}\n"
@@ -195,7 +224,7 @@ class Trainset(InitTrain):
                 plt.grid(True, linestyle="--", alpha=0.7)
                 plt.tight_layout()
 
-                out_path = os.path.join(save_dir, f"{args.source_condition}_tgt-{args.target_condition}.png")
+                out_path = os.path.join(save_dir, file_stem + ".png")
                 plt.savefig(out_path, dpi=300)
                 plt.close()
                 logging.info(f"Saved visualization: {out_path}")

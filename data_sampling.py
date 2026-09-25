@@ -102,6 +102,8 @@ def _stft_crop_and_resize(
 def _collect_pass_list(root: str, condition: str, wear_map: dict):
     cid = condition[1:]
     pass_dir = os.path.join(root, condition, condition)
+    if not os.path.isdir(pass_dir):
+        pass_dir = os.path.join(root, condition)
     files = sorted(glob.glob(os.path.join(pass_dir, f"c_{cid}_*.csv")))
 
     items = []
@@ -133,6 +135,8 @@ def build_and_save(
         print(f"\n===== CONDITION {cond} =====")
 
         wear_path = os.path.join(root, cond, f"{cond}_wear.csv")
+        if not os.path.exists(wear_path):
+            wear_path = os.path.join(root, f"{cond}_wear.csv")
         wear_df = _load_wear_mean(wear_path)
         wear_map = dict(zip(wear_df['pass'], wear_df['VB']))
         print(f"[INFO] wear entries: {len(wear_map)}")

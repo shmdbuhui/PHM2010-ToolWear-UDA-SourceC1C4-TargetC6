@@ -13,7 +13,7 @@ class InitTrain(object):
 
     def __init__(self, args):
         self.args = args
-        if args.cuda_device:
+        if args.cuda_device not in ('', 'cpu') and torch.cuda.is_available():
             self.device = torch.device("cuda:" + args.cuda_device)
             logging.info('using {} / {} gpus'.format(len(args.cuda_device.split(',')), torch.cuda.device_count()))
         else:
@@ -135,7 +135,7 @@ class InitTrain(object):
         args = self.args
         self.datasets = {}
 
-        npz_dir   = getattr(args, "npz_dir", "dataset")
+        npz_dir   = args.data_dir
         norm_type = getattr(args, "norm_type", "zscore")
 
         # ----- SOURCE (train) -----
@@ -169,6 +169,10 @@ class InitTrain(object):
         # Dataloaders
         # -----------------
         dataset_keys = ['source_train', 'target_unlabeled', 'target_test']
+        train_generators = {
+            key: torch.Generator().manual_seed(args.random_state + offset)
+            for offset, key in enumerate(['source_train', 'target_unlabeled'])
+        }
         self.dataloaders = {
             x: torch.utils.data.DataLoader(
                 self.datasets[x],
@@ -176,7 +180,8 @@ class InitTrain(object):
                 shuffle=(x.endswith('train') or x == 'target_unlabeled'),
                 num_workers=args.num_workers,
                 drop_last=(x.endswith('train') or x == 'target_unlabeled'),  # for training, drop_last=True
-                pin_memory=(self.device.type == 'cuda')
+                pin_memory=(self.device.type == 'cuda'),
+                generator=train_generators.get(x)
             )
             for x in dataset_keys
         }

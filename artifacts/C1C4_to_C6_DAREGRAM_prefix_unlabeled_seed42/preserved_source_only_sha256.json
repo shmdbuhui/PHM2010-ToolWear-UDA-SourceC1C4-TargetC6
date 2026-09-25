@@ -1,0 +1,26 @@
+﻿[
+    {
+        "file":  "config.json",
+        "sha256":  "62fe5f743d05c2ba2a786aa40bf398dd40452fe1eb1ff29e0a6455de8719ad81"
+    },
+    {
+        "file":  "epoch50.pth",
+        "sha256":  "b74d86f2cdd748fd5f0974e8099145e025d60b8faae59d19386a434f37fb515a"
+    },
+    {
+        "file":  "c6_suffix_predictions.csv",
+        "sha256":  "b08b6d1762c247273ee63de00beb3b30fb4b93de92cc756d1628d5c560e71e83"
+    },
+    {
+        "file":  "c6_suffix_prediction.png",
+        "sha256":  "aeee623845c7d78842fde273c2830ed7b09491723a02462c1760f27e85f3310f"
+    },
+    {
+        "file":  "metrics.json",
+        "sha256":  "c57f4b262e0d11781c3d679850c75b14cb8e7c104f5220266afe271d298961e3"
+    },
+    {
+        "file":  "run.log",
+        "sha256":  "376280256db8f7668551867aa284de89703a7298bf46cd3a6d0cf061166b181c"
+    }
+]

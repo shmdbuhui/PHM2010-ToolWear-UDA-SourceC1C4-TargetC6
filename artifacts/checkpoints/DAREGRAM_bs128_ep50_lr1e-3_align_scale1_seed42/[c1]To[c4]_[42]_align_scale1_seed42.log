@@ -1,0 +1,390 @@
+09-24 21:22:09 ==== Runtime Args ====
+09-24 21:22:09 model_name: DAREGRAM
+09-24 21:22:09 source: c1
+09-24 21:22:09 target: c4
+09-24 21:22:09 data_dir: .\dataset
+09-24 21:22:09 cuda_device: cpu
+09-24 21:22:09 save_dir: .\artifacts\checkpoints\DAREGRAM_bs128_ep50_lr1e-3_align_scale1_seed42
+09-24 21:22:09 max_epoch: 50
+09-24 21:22:09 batch_size: 128
+09-24 21:22:09 num_workers: 0
+09-24 21:22:09 random_state: 42
+09-24 21:22:09 align_scale: 1.0
+09-24 21:22:09 normlizetype: None
+09-24 21:22:09 opt: adam
+09-24 21:22:09 lr: 0.001
+09-24 21:22:09 momentum: 0.9
+09-24 21:22:09 betas: (0.9, 0.999)
+09-24 21:22:09 weight_decay: 1e-05
+09-24 21:22:09 lr_scheduler: fix
+09-24 21:22:09 gamma: 0.2
+09-24 21:22:09 steps: 20
+09-24 21:22:09 tradeoff: ['exp']
+09-24 21:22:09 dropout: 0.2
+09-24 21:22:09 grad_clip: 1.0
+09-24 21:22:09 save: True
+09-24 21:22:09 load_path: 
+09-24 21:22:09 tsne: False
+09-24 21:22:09 source_condition: c1
+09-24 21:22:09 target_condition: c4
+09-24 21:22:09 run_tag: align_scale1_seed42
+09-24 21:22:09 save_path: .\artifacts\checkpoints\DAREGRAM_bs128_ep50_lr1e-3_align_scale1_seed42\[c1]To[c4]_[42]_align_scale1_seed42
+09-24 21:22:12 using cpu
+09-24 21:22:12 Initial model SHA256: 5e2d5d5ef56536f42ad349c7f0bbc486d866f84800e168f9b739e348c24fa84d
+09-24 21:22:13 source training set: 315
+09-24 21:22:15 target unlabeled set: 315
+09-24 21:22:15 target test set: 315
+09-24 21:22:15 -----Epoch 1/50-----
+09-24 21:22:28 Train-Total Loss: 12005.6792
+09-24 21:22:28 Train-Regressor(MSE): 12005.6792
+09-24 21:22:28 Train-DARE-GRAM Loss: 0.9474
+09-24 21:22:28 Train-Weighted Alignment: 0.000000
+09-24 21:22:28 Batch order SHA256: source=f48ffc4ccc340ab739aebc606a2c97dd23a38e18e05cde70240990549f071ee4 target=76662740d357f3053f9eafaa3f2cfdd8a66ae75500f7f703fe09b9c87d417bb5
+09-24 21:22:28 Backbone BN batches tracked: 4
+09-24 21:22:28 -----Epoch 2/50-----
+09-24 21:22:30 Alignment gradient norm, source=0.506913245, target=0.509140134
+09-24 21:22:38 Train-Total Loss: 11219.6538
+09-24 21:22:38 Train-Regressor(MSE): 11218.1714
+09-24 21:22:38 Train-DARE-GRAM Loss: 14.5799
+09-24 21:22:38 Train-Weighted Alignment: 1.482601
+09-24 21:22:38 Batch order SHA256: source=b61decd8fbef788644ac577b84b925d1e86eb47b298b394ac1cc6d1342732e56 target=ed7cbdb7891cd320472894415a5125ea484db207738dde8a6281b307ceee744b
+09-24 21:22:38 Backbone BN batches tracked: 8
+09-24 21:22:38 -----Epoch 3/50-----
+09-24 21:22:48 Train-Total Loss: 9822.8931
+09-24 21:22:48 Train-Regressor(MSE): 9817.4062
+09-24 21:22:48 Train-DARE-GRAM Loss: 27.2593
+09-24 21:22:48 Train-Weighted Alignment: 5.487162
+09-24 21:22:48 Batch order SHA256: source=f328a159132ad1cb5380bf3ee8fd64026ca7bf7609074928f36a025b69355502 target=59fefab53803566ab202a613cce2128f83903c152b45f2211f1a4e60e980bab9
+09-24 21:22:48 Backbone BN batches tracked: 12
+09-24 21:22:48 -----Epoch 4/50-----
+09-24 21:22:58 Train-Total Loss: 8485.8210
+09-24 21:22:58 Train-Regressor(MSE): 8475.8049
+09-24 21:22:58 Train-DARE-GRAM Loss: 33.7356
+09-24 21:22:58 Train-Weighted Alignment: 10.016298
+09-24 21:22:58 Batch order SHA256: source=47a5312f54d3dfe3720d379c3fdbebe2b1ad28dea233f0be14aa0a2b55b8ae00 target=4af21b8fbfcf5e36034eb836883d77d86d3f9c1f7a0939fdfcf5fb809b53b89c
+09-24 21:22:58 Backbone BN batches tracked: 16
+09-24 21:22:58 -----Epoch 5/50-----
+09-24 21:23:08 Train-Total Loss: 6957.0002
+09-24 21:23:08 Train-Regressor(MSE): 6948.9995
+09-24 21:23:08 Train-DARE-GRAM Loss: 20.6784
+09-24 21:23:08 Train-Weighted Alignment: 8.000732
+09-24 21:23:08 Batch order SHA256: source=01cb0f82c11351c990864c4d4bfd81dcbf42e57ce29a8be38b210c681462a499 target=1535a197d743bdcab200200af257cb8a0013a814f66f02c01500f95dcaf785ae
+09-24 21:23:08 Backbone BN batches tracked: 20
+09-24 21:23:08 -----Epoch 6/50-----
+09-24 21:23:18 Train-Total Loss: 5538.2092
+09-24 21:23:18 Train-Regressor(MSE): 5521.9424
+09-24 21:23:18 Train-DARE-GRAM Loss: 34.6027
+09-24 21:23:18 Train-Weighted Alignment: 16.266890
+09-24 21:23:18 Batch order SHA256: source=6cf6621dff56efd05ac8e6018dbd4449a6dfecc5a3f7bc1f61be2233d3788880 target=c8cd56088fcedffe76ef12c21db9298420a46384850cd040ce885cb8a31ac9b3
+09-24 21:23:18 Backbone BN batches tracked: 24
+09-24 21:23:18 -----Epoch 7/50-----
+09-24 21:23:28 Train-Total Loss: 4007.9160
+09-24 21:23:28 Train-Regressor(MSE): 3988.7190
+09-24 21:23:28 Train-DARE-GRAM Loss: 35.1782
+09-24 21:23:28 Train-Weighted Alignment: 19.196938
+09-24 21:23:28 Batch order SHA256: source=4d2c47ed778a69fdae90820715306d404e1a1520fdb5257019605c4ff196232f target=b54899d5f8f97a3a250f7c0b834483937eba5e875633ae7261c1e0fd1f13fa71
+09-24 21:23:28 Backbone BN batches tracked: 28
+09-24 21:23:28 -----Epoch 8/50-----
+09-24 21:23:38 Train-Total Loss: 2686.0935
+09-24 21:23:38 Train-Regressor(MSE): 2641.3245
+09-24 21:23:38 Train-DARE-GRAM Loss: 72.9902
+09-24 21:23:38 Train-Weighted Alignment: 44.769087
+09-24 21:23:38 Batch order SHA256: source=d7e06d8acf9cf3fa5ce4cc2f1fa50fae0e3a21ca96405b57761e61f601ade2da target=f0ec9f84fd5d6067d82c722b815ec398c5e090edb21f854d9ec40a04e0f429bd
+09-24 21:23:38 Backbone BN batches tracked: 32
+09-24 21:23:38 -----Epoch 9/50-----
+09-24 21:23:49 Train-Total Loss: 1677.9974
+09-24 21:23:49 Train-Regressor(MSE): 1654.0198
+09-24 21:23:49 Train-DARE-GRAM Loss: 35.6244
+09-24 21:23:49 Train-Weighted Alignment: 23.977573
+09-24 21:23:49 Batch order SHA256: source=45ed539e8c25b956855fb00f2180e52e3f6c7d485d324f937de816001416944f target=816da732f5d109511e28d66356a8fd23d9715fa056581e5daa5c39d4d0eb06a9
+09-24 21:23:49 Backbone BN batches tracked: 36
+09-24 21:23:49 -----Epoch 10/50-----
+09-24 21:23:59 Train-Total Loss: 854.6849
+09-24 21:23:59 Train-Regressor(MSE): 830.7139
+09-24 21:23:59 Train-DARE-GRAM Loss: 33.0579
+09-24 21:23:59 Train-Weighted Alignment: 23.971047
+09-24 21:23:59 Batch order SHA256: source=b4b135c0963e2823670a94dc2f9762072174da378b95b5dd590a94208bd1e8d9 target=78448bf13b76d8a983cca89569b768790244142956e8b64bc41669245e980fca
+09-24 21:23:59 Backbone BN batches tracked: 40
+09-24 21:23:59 -----Epoch 11/50-----
+09-24 21:24:10 Train-Total Loss: 325.2743
+09-24 21:24:10 Train-Regressor(MSE): 295.1239
+09-24 21:24:10 Train-DARE-GRAM Loss: 39.1546
+09-24 21:24:10 Train-Weighted Alignment: 30.150350
+09-24 21:24:10 Batch order SHA256: source=ee05a932cead5eea599824999d83e9f8f4816daa5e7fce0e3227ed441e6b3a6b target=0c5f44740f3cd6fddd81bb1aaa74a24bc03c2c08f07a9e6f5edebb3930c87443
+09-24 21:24:10 Backbone BN batches tracked: 44
+09-24 21:24:10 -----Epoch 12/50-----
+09-24 21:24:20 Train-Total Loss: 143.4961
+09-24 21:24:20 Train-Regressor(MSE): 119.1988
+09-24 21:24:20 Train-DARE-GRAM Loss: 30.0554
+09-24 21:24:20 Train-Weighted Alignment: 24.297325
+09-24 21:24:20 Batch order SHA256: source=0d3a0670765544b0bb6837b757f9f4acfccb91352c34d2a7e2fefa9b72eb715f target=82d1f69adef4c121c7c6a8d976d1d94b951eb9e607f898102d7fb4c0c7235677
+09-24 21:24:20 Backbone BN batches tracked: 48
+09-24 21:24:20 -----Epoch 13/50-----
+09-24 21:24:31 Train-Total Loss: 113.4495
+09-24 21:24:31 Train-Regressor(MSE): 103.0614
+09-24 21:24:31 Train-DARE-GRAM Loss: 12.3525
+09-24 21:24:31 Train-Weighted Alignment: 10.388111
+09-24 21:24:31 Batch order SHA256: source=c03e6d2b279c73f82739bf5525d3039206d3dc159caef98232b9a3a64e801db3 target=4d011422852f813dcded59140a37782ba3c4048f91d1589e54498a496fb60d82
+09-24 21:24:31 Backbone BN batches tracked: 52
+09-24 21:24:31 -----Epoch 14/50-----
+09-24 21:24:40 Train-Total Loss: 316.2845
+09-24 21:24:40 Train-Regressor(MSE): 305.0577
+09-24 21:24:40 Train-DARE-GRAM Loss: 12.9281
+09-24 21:24:40 Train-Weighted Alignment: 11.226747
+09-24 21:24:40 Batch order SHA256: source=565d54014761dba99b6bc87738dbc6cfdfb911f675b8d57a409f042f515945b9 target=bb5bf7a6a6bdf227b4abf176432ec0bcd6c2f36ca8eb224fb18bd3dccd6e485f
+09-24 21:24:40 Backbone BN batches tracked: 56
+09-24 21:24:40 -----Epoch 15/50-----
+09-24 21:24:50 Train-Total Loss: 240.5932
+09-24 21:24:50 Train-Regressor(MSE): 228.2357
+09-24 21:24:50 Train-DARE-GRAM Loss: 13.8634
+09-24 21:24:50 Train-Weighted Alignment: 12.357470
+09-24 21:24:50 Batch order SHA256: source=9d73c53effe1953aa16f495494ae5fb62176d349fcbad8d864ba18b0595c17d5 target=2c255aecf416fa0d1d31380c472feed7fe2c9c3aa7812abc01c696af4318b8e2
+09-24 21:24:50 Backbone BN batches tracked: 60
+09-24 21:24:50 -----Epoch 16/50-----
+09-24 21:24:59 Train-Total Loss: 159.9252
+09-24 21:24:59 Train-Regressor(MSE): 156.3284
+09-24 21:24:59 Train-DARE-GRAM Loss: 3.9502
+09-24 21:24:59 Train-Weighted Alignment: 3.596792
+09-24 21:24:59 Batch order SHA256: source=c5e2fc44d25899ad09b9c0018cf2655f39d7a804174d03d110187ef27be38cc7 target=a7ffc12257af11cccaf1158e2d57ef635161c3c554e4d886946591f8941793b5
+09-24 21:24:59 Backbone BN batches tracked: 64
+09-24 21:24:59 -----Epoch 17/50-----
+09-24 21:25:09 Train-Total Loss: 62.4708
+09-24 21:25:09 Train-Regressor(MSE): 61.1082
+09-24 21:25:09 Train-DARE-GRAM Loss: 1.4708
+09-24 21:25:09 Train-Weighted Alignment: 1.362610
+09-24 21:25:09 Batch order SHA256: source=cd6ffc70e1992637a46fb56e13d0c05a718230aa011149120310beeb2caec613 target=8fe78751ab53fe4e6b13eed667acc6a59d25f033165c3ca2b1f5160e41ca8806
+09-24 21:25:09 Backbone BN batches tracked: 68
+09-24 21:25:09 -----Epoch 18/50-----
+09-24 21:25:19 Train-Total Loss: 66.5314
+09-24 21:25:19 Train-Regressor(MSE): 62.0231
+09-24 21:25:19 Train-DARE-GRAM Loss: 4.7980
+09-24 21:25:19 Train-Weighted Alignment: 4.508270
+09-24 21:25:19 Batch order SHA256: source=c4bf21f1112cd1e26894e305a4819877f7e990673b302199aadde6b4ac014681 target=eb613370299df8ea2aece300ddf0b8cc1d23ac73968f930b7a1cbcc9dcb135a3
+09-24 21:25:19 Backbone BN batches tracked: 72
+09-24 21:25:19 -----Epoch 19/50-----
+09-24 21:25:28 Train-Total Loss: 74.0851
+09-24 21:25:28 Train-Regressor(MSE): 73.3903
+09-24 21:25:28 Train-DARE-GRAM Loss: 0.7310
+09-24 21:25:28 Train-Weighted Alignment: 0.694844
+09-24 21:25:28 Batch order SHA256: source=d8e851f87416e9b22810f6cec324da7b0c758a6e78f4ac6982f1123e66d92dad target=4ca5d054514888afa610bc5c7ca712ad5043a5e41d7b186bf5e5e3414c81b409
+09-24 21:25:28 Backbone BN batches tracked: 76
+09-24 21:25:28 -----Epoch 20/50-----
+09-24 21:25:38 Train-Total Loss: 81.5957
+09-24 21:25:38 Train-Regressor(MSE): 76.5145
+09-24 21:25:38 Train-DARE-GRAM Loss: 5.2961
+09-24 21:25:38 Train-Weighted Alignment: 5.081245
+09-24 21:25:38 Batch order SHA256: source=561c76ee5d4e13eaebf0c1023a8c47ab80394bf250dec9def22914da68b61a90 target=782311d426b0f8c4d3defa5135b135c9f1e9d22f83099b1c4338e04c339c6f7d
+09-24 21:25:38 Backbone BN batches tracked: 80
+09-24 21:25:38 -----Epoch 21/50-----
+09-24 21:25:48 Train-Total Loss: 59.2509
+09-24 21:25:48 Train-Regressor(MSE): 57.6649
+09-24 21:25:48 Train-DARE-GRAM Loss: 1.6405
+09-24 21:25:48 Train-Weighted Alignment: 1.586002
+09-24 21:25:48 Batch order SHA256: source=e1e71de4c558ddcd67ea026bc8a88ea87ba214582c30220b635d42ea2779214c target=396aed535294eb97a1eb3ba8ff17d8000f383c0cecc9ce1aaa24efbbdf1d1df8
+09-24 21:25:48 Backbone BN batches tracked: 84
+09-24 21:25:48 -----Epoch 22/50-----
+09-24 21:25:58 Train-Total Loss: 103.5772
+09-24 21:25:58 Train-Regressor(MSE): 101.5245
+09-24 21:25:58 Train-DARE-GRAM Loss: 2.1100
+09-24 21:25:58 Train-Weighted Alignment: 2.052682
+09-24 21:25:58 Batch order SHA256: source=f9dc854b4fba63ab4184e6ce761aab22e62ea98e620a428865b73497194cdc6c target=e48ca431aa73d17648e9ad4f074161cc190ded8649482b79c9c26fca6946c1de
+09-24 21:25:58 Backbone BN batches tracked: 88
+09-24 21:25:58 -----Epoch 23/50-----
+09-24 21:26:07 Train-Total Loss: 39.8220
+09-24 21:26:07 Train-Regressor(MSE): 36.4620
+09-24 21:26:07 Train-DARE-GRAM Loss: 3.4363
+09-24 21:26:07 Train-Weighted Alignment: 3.360000
+09-24 21:26:07 Batch order SHA256: source=f51f394d618392e0279f06229cb670ee01b79e36738bece6d184962177142257 target=7ca82a06093627d8c7b6994786a68d76838cd3c220bb852c2a326e422b93dd84
+09-24 21:26:07 Backbone BN batches tracked: 92
+09-24 21:26:07 -----Epoch 24/50-----
+09-24 21:26:17 Train-Total Loss: 82.7857
+09-24 21:26:17 Train-Regressor(MSE): 79.8133
+09-24 21:26:17 Train-DARE-GRAM Loss: 3.0273
+09-24 21:26:17 Train-Weighted Alignment: 2.972369
+09-24 21:26:17 Batch order SHA256: source=ebc8c973dbd789787cd55f4efa349c3716ff26b3ca59848a4df783db22573bf3 target=93ee1c2a274a56556286f09a84ac410511c97a5dd0c922df6db9569704734e3a
+09-24 21:26:17 Backbone BN batches tracked: 96
+09-24 21:26:17 -----Epoch 25/50-----
+09-24 21:26:26 Train-Total Loss: 54.9714
+09-24 21:26:26 Train-Regressor(MSE): 51.9196
+09-24 21:26:26 Train-DARE-GRAM Loss: 3.0977
+09-24 21:26:26 Train-Weighted Alignment: 3.051807
+09-24 21:26:26 Batch order SHA256: source=1486b0a72fe41d96cdc37e97c9701b8964c09b17310f41912a87aeb024482f24 target=ac09845b292f417a905ab3bbded2ec0ee52cd38dcae2f8326119935f5ff645da
+09-24 21:26:26 Backbone BN batches tracked: 100
+09-24 21:26:26 -----Epoch 26/50-----
+09-24 21:26:36 Train-Total Loss: 59.5019
+09-24 21:26:36 Train-Regressor(MSE): 48.6152
+09-24 21:26:36 Train-DARE-GRAM Loss: 11.0200
+09-24 21:26:36 Train-Weighted Alignment: 10.886709
+09-24 21:26:36 Batch order SHA256: source=46a8d2c4f433d6922b6707104bd25b50d489949bd9b304ee7c41cfc814fb4c66 target=9ebe7047eb204f829e11784b25c814d87dcc592ac0fb069af663d33701c21adc
+09-24 21:26:36 Backbone BN batches tracked: 104
+09-24 21:26:36 -----Epoch 27/50-----
+09-24 21:26:46 Train-Total Loss: 44.2705
+09-24 21:26:46 Train-Regressor(MSE): 39.5210
+09-24 21:26:46 Train-DARE-GRAM Loss: 4.7969
+09-24 21:26:46 Train-Weighted Alignment: 4.749522
+09-24 21:26:46 Batch order SHA256: source=d6b0033cdc124d53170accfc1ad843d76771f9ddfec6ee87ff43ddb9627e18ac target=f08259b3a4f646956b031f83517e6146a590debb2ed8f236cd5972a84930177b
+09-24 21:26:46 Backbone BN batches tracked: 108
+09-24 21:26:46 -----Epoch 28/50-----
+09-24 21:26:56 Train-Total Loss: 44.2667
+09-24 21:26:56 Train-Regressor(MSE): 39.1133
+09-24 21:26:56 Train-DARE-GRAM Loss: 5.1953
+09-24 21:26:56 Train-Weighted Alignment: 5.153466
+09-24 21:26:56 Batch order SHA256: source=b607b2561c7ff621de18f6c905c446da197454d2effda9852eec41e55709d5b0 target=573ef096f31c6172b8c71a5fbd84712f7d00dd38c83365c7c588a8aebe19fdd0
+09-24 21:26:56 Backbone BN batches tracked: 112
+09-24 21:26:56 -----Epoch 29/50-----
+09-24 21:27:06 Train-Total Loss: 45.4314
+09-24 21:27:06 Train-Regressor(MSE): 42.3833
+09-24 21:27:06 Train-DARE-GRAM Loss: 3.0682
+09-24 21:27:06 Train-Weighted Alignment: 3.048066
+09-24 21:27:06 Batch order SHA256: source=289a736565ca3d11e945aa3b71364f67f0d1d89f6d865461105fac83c406c0f6 target=1eb6ab5e7b0b5b4e8a5e92de2a300abfa65144f8a878f1ce5cf4a6a305d1ddcf
+09-24 21:27:06 Backbone BN batches tracked: 116
+09-24 21:27:06 -----Epoch 30/50-----
+09-24 21:27:16 Train-Total Loss: 58.3503
+09-24 21:27:16 Train-Regressor(MSE): 55.6775
+09-24 21:27:16 Train-DARE-GRAM Loss: 2.6873
+09-24 21:27:16 Train-Weighted Alignment: 2.672834
+09-24 21:27:16 Batch order SHA256: source=711e12cabf24fe0ff964ab69fb06f767a865135e535484dca45ab47c76d39afc target=f6de9c117e943d00daf7660843236d540db340c71370c2516fdfe598fd5e9a36
+09-24 21:27:16 Backbone BN batches tracked: 120
+09-24 21:27:16 -----Epoch 31/50-----
+09-24 21:27:26 Train-Total Loss: 46.7829
+09-24 21:27:26 Train-Regressor(MSE): 46.2723
+09-24 21:27:26 Train-DARE-GRAM Loss: 0.5128
+09-24 21:27:26 Train-Weighted Alignment: 0.510558
+09-24 21:27:26 Batch order SHA256: source=9fbc75c9c91ff8b6181f427d2259155f22a679126fe36daf5adfce38c7d49f0d target=f8b923cca13262afdb7677d6b801708ad8991cef5a6e3ae6bb98c333cd3b2f62
+09-24 21:27:26 Backbone BN batches tracked: 124
+09-24 21:27:26 -----Epoch 32/50-----
+09-24 21:27:35 Train-Total Loss: 38.5786
+09-24 21:27:35 Train-Regressor(MSE): 36.3140
+09-24 21:27:35 Train-DARE-GRAM Loss: 2.2727
+09-24 21:27:35 Train-Weighted Alignment: 2.264614
+09-24 21:27:35 Batch order SHA256: source=cdb06bc42b444f083e236635b17b60fbce70d182f135cc5ae8e5756bd131a55e target=9a5a79bceb4576d76f299d8dfbe00f85450710b8c0d5190b3c7ef79897a7cc78
+09-24 21:27:35 Backbone BN batches tracked: 128
+09-24 21:27:35 -----Epoch 33/50-----
+09-24 21:27:45 Train-Total Loss: 44.2830
+09-24 21:27:45 Train-Regressor(MSE): 43.7015
+09-24 21:27:45 Train-DARE-GRAM Loss: 0.5832
+09-24 21:27:45 Train-Weighted Alignment: 0.581515
+09-24 21:27:45 Batch order SHA256: source=353d6dc77f9810a85a9705d1d3b82ab00644bac7dcf5031be1677c00cdbadd17 target=cbfd04d4d7b3ff03c84b1b6e70574e9810a6064c8be77cdcf0b72b834bd02f97
+09-24 21:27:45 Backbone BN batches tracked: 132
+09-24 21:27:45 -----Epoch 34/50-----
+09-24 21:27:55 Train-Total Loss: 36.1586
+09-24 21:27:55 Train-Regressor(MSE): 33.3030
+09-24 21:27:55 Train-DARE-GRAM Loss: 2.8624
+09-24 21:27:55 Train-Weighted Alignment: 2.855615
+09-24 21:27:55 Batch order SHA256: source=478aa9517a4c46600b915ca7ba6e0adbba99b974eb9586bf49228c937cf316d6 target=a6e4345c84126a94bdb971984feaa65e3deaa4c4279187adbe9d4f8276024b49
+09-24 21:27:55 Backbone BN batches tracked: 136
+09-24 21:27:55 -----Epoch 35/50-----
+09-24 21:28:05 Train-Total Loss: 51.2684
+09-24 21:28:05 Train-Regressor(MSE): 47.4053
+09-24 21:28:05 Train-DARE-GRAM Loss: 3.8706
+09-24 21:28:05 Train-Weighted Alignment: 3.863115
+09-24 21:28:05 Batch order SHA256: source=0a752429ffb1c68a85b34259e719a7e8896a3068ffd7b8ae4d79d6402b5c6c81 target=0ec5baf5a8aff1af20be258f3dd1676a9036301b1d7780394c9abe59ec0a3758
+09-24 21:28:05 Backbone BN batches tracked: 140
+09-24 21:28:05 -----Epoch 36/50-----
+09-24 21:28:15 Train-Total Loss: 49.7950
+09-24 21:28:15 Train-Regressor(MSE): 45.8199
+09-24 21:28:15 Train-DARE-GRAM Loss: 3.9814
+09-24 21:28:15 Train-Weighted Alignment: 3.975150
+09-24 21:28:15 Batch order SHA256: source=41c3894048b7ae46e780973b9ccba2b12059c6abcb1c8186bbf510c8990399f3 target=0c842b3ee78749da329de6b9dede7072ffb17823dfd1a0441a031b65de8e82d2
+09-24 21:28:15 Backbone BN batches tracked: 144
+09-24 21:28:15 -----Epoch 37/50-----
+09-24 21:28:25 Train-Total Loss: 49.7746
+09-24 21:28:25 Train-Regressor(MSE): 45.9696
+09-24 21:28:25 Train-DARE-GRAM Loss: 3.8100
+09-24 21:28:25 Train-Weighted Alignment: 3.805050
+09-24 21:28:25 Batch order SHA256: source=ea54d649c401e65541cd94d828328aaf163a54e0c4b3b31b106faf97bb133319 target=ed7429351b544e101dbe1c13415003032ea42208903010335b9adb45f22b598f
+09-24 21:28:25 Backbone BN batches tracked: 148
+09-24 21:28:25 -----Epoch 38/50-----
+09-24 21:28:36 Train-Total Loss: 47.9456
+09-24 21:28:36 Train-Regressor(MSE): 45.8188
+09-24 21:28:36 Train-DARE-GRAM Loss: 2.1289
+09-24 21:28:36 Train-Weighted Alignment: 2.126706
+09-24 21:28:36 Batch order SHA256: source=2811e3a86ffd7df36343aaf9808cc7a3e7e8c41f64e903a960ad8d6a9bbb4849 target=18dbf48a1f99346b19455386b9d602871038e95fa52b590bbf8f068248c0a8c4
+09-24 21:28:36 Backbone BN batches tracked: 152
+09-24 21:28:36 -----Epoch 39/50-----
+09-24 21:28:46 Train-Total Loss: 34.2623
+09-24 21:28:46 Train-Regressor(MSE): 32.9580
+09-24 21:28:46 Train-DARE-GRAM Loss: 1.3054
+09-24 21:28:46 Train-Weighted Alignment: 1.304276
+09-24 21:28:46 Batch order SHA256: source=581028f0e6d31cf66120d9610d00bba4221d69649dd429ce4f9a512adee624d2 target=e0711b2a70ca4663f05d42543616404737874be4ad89a72d357717d84ea936ac
+09-24 21:28:46 Backbone BN batches tracked: 156
+09-24 21:28:46 -----Epoch 40/50-----
+09-24 21:28:56 Train-Total Loss: 44.7480
+09-24 21:28:56 Train-Regressor(MSE): 44.5809
+09-24 21:28:56 Train-DARE-GRAM Loss: 0.1672
+09-24 21:28:56 Train-Weighted Alignment: 0.167056
+09-24 21:28:56 Batch order SHA256: source=c0132313124d566177c6c7db4b2793e3c388e609148a3dc982f2954cf033ce98 target=77eb8729851cd0404daeb0398d22b62aacf3d2a6d19f2b97cbb289b289ef2619
+09-24 21:28:56 Backbone BN batches tracked: 160
+09-24 21:28:56 -----Epoch 41/50-----
+09-24 21:29:07 Train-Total Loss: 43.9185
+09-24 21:29:07 Train-Regressor(MSE): 41.8268
+09-24 21:29:07 Train-DARE-GRAM Loss: 2.0929
+09-24 21:29:07 Train-Weighted Alignment: 2.091681
+09-24 21:29:07 Batch order SHA256: source=1aaa742f0be241f90fb214a494cf68067c73048332ec95d6f888441405566cbf target=4f82c1bc1b09880a48eeeb66727b4264749bf4d02159a0106c4aec5401dd9b52
+09-24 21:29:07 Backbone BN batches tracked: 164
+09-24 21:29:07 -----Epoch 42/50-----
+09-24 21:29:17 Train-Total Loss: 39.3807
+09-24 21:29:17 Train-Regressor(MSE): 38.5585
+09-24 21:29:17 Train-DARE-GRAM Loss: 0.8225
+09-24 21:29:17 Train-Weighted Alignment: 0.822149
+09-24 21:29:17 Batch order SHA256: source=7401ad2ce7f38757d25fc74b98d0cbcafc77af65661cca121c3885a4e4902746 target=c784f59aab0872cedca8bbb96078d81d969acc1805dac53766a0cec1b803b3cf
+09-24 21:29:17 Backbone BN batches tracked: 168
+09-24 21:29:17 -----Epoch 43/50-----
+09-24 21:29:26 Train-Total Loss: 35.6911
+09-24 21:29:26 Train-Regressor(MSE): 32.6611
+09-24 21:29:26 Train-DARE-GRAM Loss: 3.0312
+09-24 21:29:26 Train-Weighted Alignment: 3.030045
+09-24 21:29:26 Batch order SHA256: source=4ae6e2e5302637c4b7289b2be78d7db34f4d9b2b0d1fb0703533b93cd83dd986 target=56b79382acf1baf1f1c8e47de1554a2797f830cf9758081539995b1855afecca
+09-24 21:29:26 Backbone BN batches tracked: 172
+09-24 21:29:26 -----Epoch 44/50-----
+09-24 21:29:34 Train-Total Loss: 44.7234
+09-24 21:29:34 Train-Regressor(MSE): 43.8372
+09-24 21:29:34 Train-DARE-GRAM Loss: 0.8864
+09-24 21:29:34 Train-Weighted Alignment: 0.886175
+09-24 21:29:34 Batch order SHA256: source=8d0d4477f455dd3cb61066b9ababe6a92c3894bb22e34ab8e52df67f3653ce39 target=ebba42400159351d3cbb0aaa72ee7e916099fb52002c1848cbffcb84fddbc492
+09-24 21:29:34 Backbone BN batches tracked: 176
+09-24 21:29:34 -----Epoch 45/50-----
+09-24 21:29:42 Train-Total Loss: 31.8185
+09-24 21:29:42 Train-Regressor(MSE): 30.9058
+09-24 21:29:42 Train-DARE-GRAM Loss: 0.9128
+09-24 21:29:42 Train-Weighted Alignment: 0.912615
+09-24 21:29:42 Batch order SHA256: source=4e1ef7c7959f0909f8e5e8b6a8eea33abbe76e54996ae7028abdcbb58c82dc21 target=3e7620d4966e5cfef37d0f1e41af24c80502214f4f7d548a0d4bc21a0731011a
+09-24 21:29:42 Backbone BN batches tracked: 180
+09-24 21:29:42 -----Epoch 46/50-----
+09-24 21:29:49 Train-Total Loss: 38.6107
+09-24 21:29:49 Train-Regressor(MSE): 37.6719
+09-24 21:29:49 Train-DARE-GRAM Loss: 0.9390
+09-24 21:29:49 Train-Weighted Alignment: 0.938829
+09-24 21:29:49 Batch order SHA256: source=6c9d025d52d77d8166f8607d657a9a24e2a742eb70a4f71649846eade7973657 target=c7a86c083f0170af3460667d5898432f8cf8a287b173edef982e6cbd5c71888b
+09-24 21:29:49 Backbone BN batches tracked: 184
+09-24 21:29:49 -----Epoch 47/50-----
+09-24 21:29:57 Train-Total Loss: 36.8225
+09-24 21:29:57 Train-Regressor(MSE): 36.0583
+09-24 21:29:57 Train-DARE-GRAM Loss: 0.7643
+09-24 21:29:57 Train-Weighted Alignment: 0.764186
+09-24 21:29:57 Batch order SHA256: source=498d8872b2d167baa9e0b0a3f96abedf8bd6a80c2973ed9f42de2b500e6abb8b target=d360d0b715ec240d1f1c92171f8e3cbedfd885b9c568e4c08d9364e383573082
+09-24 21:29:57 Backbone BN batches tracked: 188
+09-24 21:29:57 -----Epoch 48/50-----
+09-24 21:30:04 Train-Total Loss: 36.3737
+09-24 21:30:04 Train-Regressor(MSE): 35.7696
+09-24 21:30:04 Train-DARE-GRAM Loss: 0.6041
+09-24 21:30:04 Train-Weighted Alignment: 0.604064
+09-24 21:30:04 Batch order SHA256: source=a09fd6ee819eef25d3f5dd7effcfd336d22b73a01c43712b85151cf32ac14aa9 target=940923738b9d613123e7329d25e61093e36e613369e44e4164aa04607b093fb6
+09-24 21:30:04 Backbone BN batches tracked: 192
+09-24 21:30:04 -----Epoch 49/50-----
+09-24 21:30:12 Train-Total Loss: 34.7919
+09-24 21:30:12 Train-Regressor(MSE): 34.4291
+09-24 21:30:12 Train-DARE-GRAM Loss: 0.3629
+09-24 21:30:12 Train-Weighted Alignment: 0.362811
+09-24 21:30:12 Batch order SHA256: source=e64b550728fb5f75be6094eb5e9e0c2a16bd145105eca614a5a0249f79ea35ab target=c2cee60b6511cd075f57113a15687205b6501584ea442da02673236ac5fa84f5
+09-24 21:30:12 Backbone BN batches tracked: 196
+09-24 21:30:12 -----Epoch 50/50-----
+09-24 21:30:19 Train-Total Loss: 44.3846
+09-24 21:30:19 Train-Regressor(MSE): 44.0661
+09-24 21:30:19 Train-DARE-GRAM Loss: 0.3185
+09-24 21:30:19 Train-Weighted Alignment: 0.318511
+09-24 21:30:19 Batch order SHA256: source=91c45fd5358338a61d9a7d03a614e59e60cdab818fdd9ff1bfbdc83528451e3e target=b6b1dfdf4b1027d76c3488df8705a39c30ce93773f111db35ce2bc2b167e4218
+09-24 21:30:19 Backbone BN batches tracked: 200
+09-24 21:30:21 [Target test] MAE=14.971, RMSE=18.112, R²=0.772, MAPE=15.92%
+09-24 21:30:21 Saved visualization: visualization\DAREGRAM_align_scale1_seed42\c1_tgt-c4_align_scale1_seed42.png
+09-24 21:30:21 Model saved to .\artifacts\checkpoints\DAREGRAM_bs128_ep50_lr1e-3_align_scale1_seed42\[c1]To[c4]_[42]_align_scale1_seed42.pth

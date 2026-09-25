@@ -1,0 +1,62 @@
+﻿[
+    {
+        "group":  "C1C4_to_C6_source_only_seed42",
+        "file":  "config.json",
+        "sha256":  "62fe5f743d05c2ba2a786aa40bf398dd40452fe1eb1ff29e0a6455de8719ad81"
+    },
+    {
+        "group":  "C1C4_to_C6_source_only_seed42",
+        "file":  "epoch50.pth",
+        "sha256":  "b74d86f2cdd748fd5f0974e8099145e025d60b8faae59d19386a434f37fb515a"
+    },
+    {
+        "group":  "C1C4_to_C6_source_only_seed42",
+        "file":  "c6_suffix_predictions.csv",
+        "sha256":  "b08b6d1762c247273ee63de00beb3b30fb4b93de92cc756d1628d5c560e71e83"
+    },
+    {
+        "group":  "C1C4_to_C6_source_only_seed42",
+        "file":  "c6_suffix_prediction.png",
+        "sha256":  "aeee623845c7d78842fde273c2830ed7b09491723a02462c1760f27e85f3310f"
+    },
+    {
+        "group":  "C1C4_to_C6_source_only_seed42",
+        "file":  "metrics.json",
+        "sha256":  "c57f4b262e0d11781c3d679850c75b14cb8e7c104f5220266afe271d298961e3"
+    },
+    {
+        "group":  "C1C4_to_C6_source_only_seed42",
+        "file":  "run.log",
+        "sha256":  "376280256db8f7668551867aa284de89703a7298bf46cd3a6d0cf061166b181c"
+    },
+    {
+        "group":  "C1C4_to_C6_DAREGRAM_prefix_unlabeled_seed42",
+        "file":  "config.json",
+        "sha256":  "f6ed1069eeb4c0ed694f78ca4b3fffe450fb68562ae6c45433f4168eb456cbc7"
+    },
+    {
+        "group":  "C1C4_to_C6_DAREGRAM_prefix_unlabeled_seed42",
+        "file":  "epoch50.pth",
+        "sha256":  "da17086f47fe8f89bab9d1e215a7cdc723d30af60a4b8e1cd87a51da83d78cd5"
+    },
+    {
+        "group":  "C1C4_to_C6_DAREGRAM_prefix_unlabeled_seed42",
+        "file":  "c6_suffix_predictions.csv",
+        "sha256":  "580011ac534a5ef34c86b2bab744e82c48b7ec8857b89a406a285c065e44e2ca"
+    },
+    {
+        "group":  "C1C4_to_C6_DAREGRAM_prefix_unlabeled_seed42",
+        "file":  "c6_suffix_prediction.png",
+        "sha256":  "d70eb49c45660f4150428a18fa26f187980a514b0e718782ec955a91657b29d0"
+    },
+    {
+        "group":  "C1C4_to_C6_DAREGRAM_prefix_unlabeled_seed42",
+        "file":  "metrics.json",
+        "sha256":  "39cea01bee8c2b1c25d2a6ec566665fb658e6faeb56bdcd42706e87a229c165b"
+    },
+    {
+        "group":  "C1C4_to_C6_DAREGRAM_prefix_unlabeled_seed42",
+        "file":  "run.log",
+        "sha256":  "e4c6dfaa9a1e5ff88af5957fea8d9713f055c2d9fb9d2f5220d130550aa2391a"
+    }
+]

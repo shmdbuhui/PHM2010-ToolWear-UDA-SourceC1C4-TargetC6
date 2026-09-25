@@ -1,0 +1,22 @@
+﻿[
+    {
+        "path":  "artifacts\\checkpoints\\resnet_bs64_ep50_lr1e-3\\[c1]To[c4]_[42].log",
+        "bytes":  10459,
+        "sha256":  "ed52bc352785d7ed12ab72367d9ffab88567fa560e816b083e10230794ddc0b3"
+    },
+    {
+        "path":  "artifacts\\checkpoints\\resnet_bs64_ep50_lr1e-3\\[c1]To[c4]_[42].pth",
+        "bytes":  44829515,
+        "sha256":  "c7904f2342db928d84020cc81c4ece0174254c361879b0b8e6fb251fb035c451"
+    },
+    {
+        "path":  "visualization\\resnet\\c1_tgt-c4.csv",
+        "bytes":  23959,
+        "sha256":  "9a79d718eef5ef263387029e963e1e931b4691d70436d65a0b5c5a6f05db444b"
+    },
+    {
+        "path":  "visualization\\resnet\\c1_tgt-c4.png",
+        "bytes":  160332,
+        "sha256":  "959a70bb3bed673c025ff42c1571a2ba86ef8e720a6f6fbc5c30941923f88751"
+    }
+]

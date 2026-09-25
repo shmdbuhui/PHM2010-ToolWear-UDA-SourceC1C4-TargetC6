@@ -205,3 +205,10 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Processed PHM2010 arrays. Each file is about 106 MB and exceeds
+# GitHub's 100 MB per-file limit. Regenerate with data_sampling.py.
+*.npz
+
+# Upstream template ignores every *.log. Keep this experiment's run logs.
+!artifacts/**/*.log

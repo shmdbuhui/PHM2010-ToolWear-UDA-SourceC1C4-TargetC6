@@ -30,6 +30,10 @@ def create_file_and_logger(args):
     lr_str = f"{args.lr:.0e}".replace("e-0", "e-").replace("e+0", "e+")
     hyperparam_suffix = f"_bs{args.batch_size}_ep{args.max_epoch}_lr{lr_str}"
     model_dir_name = args.model_name + hyperparam_suffix
+    if args.model_name == 'DAREGRAM':
+        args.run_tag = f'align_scale{args.align_scale:g}_seed{args.random_state}'
+        model_dir_name += '_' + args.run_tag
+        file_name += '_' + args.run_tag
     
     save_dir = os.path.join(args.save_dir, model_dir_name)
     os.makedirs(save_dir, exist_ok=True)

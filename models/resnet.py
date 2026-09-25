@@ -107,7 +107,10 @@ class Trainset(InitTrain):
                 save_dir = os.path.join("visualization", args.model_name)
                 os.makedirs(save_dir, exist_ok=True)
 
-                passes = np.arange(len(y_true))
+                passes = np.arange(1, len(y_true) + 1)
+                np.savetxt(os.path.join(save_dir, f"{args.source_condition}_tgt-{args.target_condition}.csv"),
+                           np.column_stack((passes, y_true, y_pred)), delimiter=",",
+                           header="cut,y_true,y_pred", comments="")
                 plt.figure(figsize=(7, 4))
                 plt.plot(passes, y_true, label="True VB", linewidth=2)
                 plt.plot(passes, y_pred, label="Predicted VB", linestyle="--", linewidth=2)

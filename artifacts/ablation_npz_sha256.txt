@@ -1,0 +1,13 @@
+﻿
+
+Path : E:\QLP\PHM2010-ToolWear-UDA-Reproduction\upstream-reproduction\dataset\train_c1.npz
+Hash : 6D4CDA0E9C50D2E74818385EBFBA372FD63A4FB30BFD36BA4A03170096EDB37F
+
+Path : E:\QLP\PHM2010-ToolWear-UDA-Reproduction\upstream-reproduction\dataset\unlabeled_c4.npz
+Hash : FCD090580E6B6B2D44890157943CDF249C3320A77571BE543C4AE91D3572D7D7
+
+Path : E:\QLP\PHM2010-ToolWear-UDA-Reproduction\upstream-reproduction\dataset\target_c4.npz
+Hash : FCD090580E6B6B2D44890157943CDF249C3320A77571BE543C4AE91D3572D7D7
+
+
+

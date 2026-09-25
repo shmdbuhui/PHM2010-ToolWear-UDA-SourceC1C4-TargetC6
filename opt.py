@@ -23,6 +23,8 @@ def parse_args():
                         help='Number of workers for dataloader')
     parser.add_argument('--random_state', type=int, default=42, 
                         help='Random state for the entire training')
+    parser.add_argument('--align_scale', type=float, default=1.0,
+                        help='DARE-GRAM alignment loss multiplier')
 
     # optimization information
     parser.add_argument('--normlizetype', type=str, choices=['0-1', '-1-1', 'mean-std','None'], default='None', 
@@ -42,7 +44,7 @@ def parse_args():
     parser.add_argument('--dropout', type=float, default=0.2, help='Dropout layer coefficient')
     parser.add_argument('--grad_clip', type=float, default=1.0, help='Gradient clipping threshold (0 to disable)')
     
-    parser.add_argument('--save', type=bool, default=False, help='Save logs and trained model checkpoints')
+    parser.add_argument('--save', action='store_true', help='Save logs and trained model checkpoints')
 
     parser.add_argument('--load_path', type=str, default='')
 
@@ -50,4 +52,3 @@ def parse_args():
     
     args = parser.parse_args()
     return args
-    

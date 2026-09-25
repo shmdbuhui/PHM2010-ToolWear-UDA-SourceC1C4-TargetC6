@@ -1,0 +1,273 @@
+﻿diff --git a/run_c1c4_to_c6_daregram_prefix.py b/run_c1c4_to_c6_daregram_full_target.py
+index b6fc1d8..bfe6a93 100644
+--- a/run_c1c4_to_c6_daregram_prefix.py
++++ b/run_c1c4_to_c6_daregram_full_target.py
+@@ -1,4 +1,4 @@
+-"""ResNet source-only + DARE-GRAM(prefix-unlabeled), C1+C4 -> C6."""
++"""Transductive ResNet + DARE-GRAM with all C6 signals unlabeled."""
+ 
+ from __future__ import annotations
+ 
+@@ -11,6 +11,7 @@ import logging
+ import math
+ import os
+ import random
++import re
+ from pathlib import Path
+ from types import SimpleNamespace
+ 
+@@ -33,7 +34,7 @@ from networks.resnet import ResNet18
+ from models.DAREGRAM import Trainset as ExistingDAREGRAM
+ 
+ 
+-RUN_NAME = "C1C4_to_C6_DAREGRAM_prefix_unlabeled_seed42"
++RUN_NAME = "C1C4_to_C6_DAREGRAM_full_target_unlabeled_seed42"
+ WINDOW_LEN = 4096
+ SEED = 42
+ BATCH_SIZE = 64
+@@ -57,6 +58,10 @@ def arguments() -> argparse.Namespace:
+         "--source-only-dir", type=Path,
+         default=Path("artifacts") / "C1C4_to_C6_source_only_seed42",
+     )
++    parser.add_argument(
++        "--prefix-dir", type=Path,
++        default=Path("artifacts") / "C1C4_to_C6_DAREGRAM_prefix_unlabeled_seed42",
++    )
+     parser.add_argument("--out-dir", type=Path, default=Path("artifacts") / RUN_NAME)
+     parser.add_argument("--device", choices=["cpu", "cuda"], default="cpu")
+     return parser.parse_args()
+@@ -134,13 +139,13 @@ class SourceWithIndex(Dataset):
+         return x, y, index
+ 
+ 
+-class UnlabeledPrefix(Dataset):
++class UnlabeledTarget(Dataset):
+     def __init__(self, samples: np.ndarray, cuts: list[int], transform):
+         self.samples = samples
+         self.cuts = cuts
+         self.transform = transform
+         if len(samples) != len(cuts):
+-            raise ValueError("Unlabeled prefix rows/cuts differ")
++            raise ValueError("Unlabeled target rows/cuts differ")
+ 
+     def __len__(self) -> int:
+         return len(self.cuts)
+@@ -180,6 +185,21 @@ def reconstructed_source_orders() -> list[list[int]]:
+     return orders
+ 
+ 
++def prefix_source_order_hashes(path: Path) -> list[str]:
++    hashes = []
++    pattern = re.compile(r"Epoch (\d+)/50 .* source_order_sha256=([0-9a-f]{64})$")
++    with path.open("r", encoding="utf-8") as handle:
++        for line in handle:
++            match = pattern.search(line.rstrip())
++            if match:
++                if int(match.group(1)) != len(hashes) + 1:
++                    raise ValueError("Prefix run has missing/out-of-order epoch logs")
++                hashes.append(match.group(2))
++    if len(hashes) != EPOCHS:
++        raise ValueError("Prefix run must contain 50 source-order hashes")
++    return hashes
++
++
+ def source_data(root: Path, npz_dir: Path, condition: str, out_dir: Path):
+     path = npz_dir / f"train_{condition}.npz"
+     with np.load(path, allow_pickle=False) as data:
+@@ -242,6 +262,9 @@ def main() -> None:
+ 
+     prefix_cuts, test_cuts = fixed_cuts(args.full_split_record, args.split_record)
+     assert not (set(prefix_cuts) & set(test_cuts))
++    target_cuts = sorted(set(prefix_cuts) | set(test_cuts))
++    if target_cuts != list(range(1, 316)):
++        raise ValueError("Full unlabeled target cuts must be exactly 1..315")
+     c1_x, c1_y, c1_files, c1_npz = source_data(args.raw_root, args.npz_dir, "c1", args.out_dir)
+     c4_x, c4_y, c4_files, c4_npz = source_data(args.raw_root, args.npz_dir, "c4", args.out_dir)
+     x_source = np.concatenate((c1_x, c4_x))
+@@ -268,37 +291,50 @@ def main() -> None:
+     source_loader = DataLoader(source_dataset, batch_size=BATCH_SIZE, shuffle=True,
+                                drop_last=True, num_workers=0, pin_memory=(device.type == "cuda"),
+                                generator=torch.Generator().manual_seed(SEED))
+-    # Construct paths from the recorded real cuts, with no suffix signal read.
+-    prefix_images = []
+-    for cut in prefix_cuts:
++    # Transductive UDA: all C6 inputs, including evaluation suffix inputs,
++    # participate in unlabeled alignment. No target wear file is opened here.
++    target_images = []
++    for cut in target_cuts:
+         path = args.raw_root / "c6" / f"c_6_{cut:03d}.csv"
+         if not path.is_file():
+             raise FileNotFoundError(path)
+         frame = sampling._read_pass_df(str(path))
+         cropped = sampling._crop_fixed_center(frame, sampling.EXPECTED_INPUT_COLS, WINDOW_LEN)
+         if cropped is None:
+-            raise ValueError(f"Could not crop C6 prefix cut {cut}")
+-        prefix_images.append(sampling._stft_crop_and_resize(cropped))
+-    x_prefix = np.stack(prefix_images)
+-    target_dataset = UnlabeledPrefix(x_prefix, prefix_cuts, transform)
++            raise ValueError(f"Could not crop C6 target cut {cut}")
++        target_images.append(sampling._stft_crop_and_resize(cropped))
++    x_target = np.stack(target_images)
++    target_dataset = UnlabeledTarget(x_target, target_cuts, transform)
+     assert not hasattr(target_dataset, "labels")
++    target_example = target_dataset[0]
++    if len(target_example) != 2 or not isinstance(target_example[1], int):
++        raise ValueError("Target Dataset must yield only (image, real cut index)")
+     target_loader = DataLoader(target_dataset, batch_size=BATCH_SIZE, shuffle=True,
+                                drop_last=True, num_workers=0, pin_memory=(device.type == "cuda"),
+                                generator=torch.Generator().manual_seed(SEED + 1))
+-    if len(target_loader) != 1 or len(source_loader) != 9:
++    if len(target_loader) != 4 or len(source_loader) != 9:
+         raise ValueError("Unexpected source/target batch count")
+     expected_source_orders = reconstructed_source_orders()
++    prefix_config = json.loads((args.prefix_dir / "config.json").read_text(encoding="utf-8"))
++    if prefix_config["c6_unlabeled_prefix_cuts"] != prefix_cuts:
++        raise ValueError("Prefix control used a different target prefix")
++    if prefix_config["source_npz_sha256"] != old_config["source_npz_sha256"]:
++        raise ValueError("Prefix control used a different C1+C4 source")
++    old_order_hashes = prefix_source_order_hashes(args.prefix_dir / "run.log")
+     info = {
+-        "run_name": RUN_NAME, "model_name": "ResNet source-only + DARE-GRAM(prefix-unlabeled)",
++        "run_name": RUN_NAME,
++        "model_name": "ResNet source-only + DARE-GRAM(full-target-unlabeled)",
++        "protocol": "transductive UDA: all 315 C6 input signals, including 221 suffix evaluation inputs, used unlabeled in alignment",
+         "seed": SEED, "source_batch_size": BATCH_SIZE, "target_batch_size": BATCH_SIZE,
+         "epochs": EPOCHS, "lr": LR, "optimizer": "Adam, default betas, no weight decay",
+         "loss": "source MSE + exp tradeoff(epoch) * original DARE_GRAM_LOSS",
+         "scheduler": "fixed", "drop_last": True, "alignment_scale": 1.0,
+         "source_conditions": ["c1", "c4"], "source_count_by_condition": {"c1": 315, "c4": 315},
+         "source_sample_count": len(source_dataset), "source_tensor_shape": list(x_source.shape),
+-        "c6_unlabeled_prefix_cuts": prefix_cuts,
+-        "c6_unlabeled_prefix_tensor_shape": list(x_prefix.shape),
++        "c6_unlabeled_target_cuts": target_cuts,
++        "c6_unlabeled_target_tensor_shape": list(x_target.shape),
+         "target_training_tensor_fields": ["stft_image", "cut_index"],
++        "target_dataset_has_label_field": False,
+         "c6_test_cuts": test_cuts, "c6_test_expected_tensor_shape": [len(test_cuts), 6, 128, 128],
+         "source_label_range": [float(y_source.min()), float(y_source.max())],
+         "c1_label_range": [float(c1_y.min()), float(c1_y.max())],
+@@ -313,18 +349,21 @@ def main() -> None:
+         "source_npz_sha256": {"c1": hash_file(c1_npz), "c4": hash_file(c4_npz)},
+         "source_file_count": {"c1": len(c1_files), "c4": len(c4_files)},
+         "source_npz_identity_audit": "All 630 NPZ rows regenerated from corresponding cut CSV and compared exactly",
+-        "c6_train_signal_reads": len(prefix_cuts), "c6_train_label_reads": 0,
++        "c6_train_signal_reads": len(target_cuts), "c6_train_label_reads": 0,
++        "target_dataloader_batches_per_cycle": len(target_loader),
++        "source_training_steps_per_epoch": len(source_loader),
+         "source_only_config": str((args.source_only_dir / "config.json").resolve()),
+         "source_only_config_sha256": hash_file(args.source_only_dir / "config.json"),
++        "prefix_config_sha256": hash_file(args.prefix_dir / "config.json"),
+         "normalization_equal_to_source_only": True,
+     }
+     logging.info("Source samples: C1=%d C4=%d combined=%d", len(c1_x), len(c4_x), len(source_dataset))
+-    logging.info("C6 unlabeled prefix cuts: %s", prefix_cuts)
++    logging.info("Transductive UDA; C6 unlabeled target cuts: %s", target_cuts)
+     logging.info("C6 fixed suffix test cuts: %s", test_cuts)
+     logging.info("Source label ranges: C1=%s C4=%s combined=%s",
+                  info["c1_label_range"], info["c4_label_range"], info["source_label_range"])
+-    logging.info("Tensor shapes: source=%s prefix=%s expected C6 test=%s",
+-                 x_source.shape, x_prefix.shape, info["c6_test_expected_tensor_shape"])
++    logging.info("Tensor shapes: source=%s full unlabeled target=%s expected C6 test=%s",
++                 x_source.shape, x_target.shape, info["c6_test_expected_tensor_shape"])
+     logging.info("C1+C4 normalization equals source-only: mean=%s std=%s", mean.tolist(), std.tolist())
+ 
+     model = nn.Module()
+@@ -341,6 +380,9 @@ def main() -> None:
+         info["reconstructed_source_only_initial_sha256"] = model_hash(baseline_init)
+     if info["initial_model_sha256"] != info["reconstructed_source_only_initial_sha256"]:
+         raise ValueError("Initial model differs from reconstructed source-only initialization")
++    if info["initial_model_sha256"] != prefix_config["initial_model_sha256"]:
++        raise ValueError("Initial model weights differ from prefix-unlabeled control")
++    info["initial_model_equal_to_prefix_control"] = True
+     logging.info("Initial model SHA256: %s (matches reconstructed source-only)",
+                  info["initial_model_sha256"])
+     optimizer = torch.optim.Adam([
+@@ -370,10 +412,8 @@ def main() -> None:
+                 target_iter = iter(target_loader)
+                 xt, target_cuts = next(target_iter)
+             batch_target_cuts = target_cuts.tolist()
+-            if len(batch_target_cuts) != BATCH_SIZE or not set(batch_target_cuts) <= set(prefix_cuts):
+-                raise ValueError("Target batch is not exactly 64 legal prefix cuts")
+-            if set(batch_target_cuts) & set(test_cuts):
+-                raise ValueError("C6 suffix entered a training batch")
++            if len(batch_target_cuts) != BATCH_SIZE or not set(batch_target_cuts) <= set(target_cuts):
++                raise ValueError("Target batch is not exactly 64 legal full-target cuts")
+             used_this_epoch.update(batch_target_cuts)
+             all_target_use.update(batch_target_cuts)
+             source_order.extend(source_rows.tolist())
+@@ -394,6 +434,8 @@ def main() -> None:
+         if source_order != expected_source_orders[epoch - 1]:
+             raise ValueError(f"Epoch {epoch} source batch order differs from source-only reconstruction")
+         order_hash = hashlib.sha256(np.asarray(source_order, dtype=np.int32).tobytes()).hexdigest()
++        if order_hash != old_order_hashes[epoch - 1]:
++            raise ValueError(f"Epoch {epoch} source batch order differs from prefix control")
+         for cut, count in sorted(used_this_epoch.items()):
+             usage_rows.append((epoch, cut, count))
+         logging.info(
+@@ -404,20 +446,21 @@ def main() -> None:
+             len(used_this_epoch), order_hash,
+         )
+ 
+-    if set(all_target_use) != set(prefix_cuts) or set(all_target_use) & set(test_cuts):
+-        raise ValueError("Target usage is incomplete or contains suffix cuts")
+-    with (args.out_dir / "target_prefix_usage.csv").open("w", newline="", encoding="utf-8") as handle:
++    if set(all_target_use) != set(target_cuts):
++        raise ValueError("Target usage is incomplete or contains extra cuts")
++    with (args.out_dir / "target_full_usage.csv").open("w", newline="", encoding="utf-8") as handle:
+         writer = csv.writer(handle)
+         writer.writerow(["epoch", "cut_index", "batch_appearances"])
+         writer.writerows(usage_rows)
+-    logging.info("Target prefix use over training: draws=%d unique=%d overlap_with_suffix=0",
+-                 sum(all_target_use.values()), len(all_target_use))
++    logging.info("Full-target unlabeled use over training: draws=%d unique=%d suffix_inputs_used=%d",
++                 sum(all_target_use.values()), len(all_target_use), len(set(all_target_use) & set(test_cuts)))
+ 
+     weight_path = args.out_dir / "epoch50.pth"
+     torch.save({"model": model.state_dict(), "epoch": EPOCHS}, weight_path)
+     logging.info("Saved final epoch 50 weights: %s", weight_path)
+ 
+-    # The first suffix signal and C6 label reads occur after training/weight save.
++    # Target suffix signals were used unlabeled in alignment. C6 wear labels
++    # are first read below, after training and the final checkpoint save.
+     c6_files = {cut: file for file, cut in signal_files(args.raw_root, "c6")}
+     model.eval()
+     predictions = []
+@@ -456,23 +499,30 @@ def main() -> None:
+     logging.info("Independent prediction CSV recomputation: %s", recalc)
+     (args.out_dir / "metrics.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
+     old_csv = pd.read_csv(args.source_only_dir / "c6_suffix_predictions.csv")
+-    if old_csv["cut_index"].astype(int).tolist() != test_cuts or not np.allclose(
+-        old_csv["true_vb"].to_numpy(), y_true, rtol=0, atol=1e-10
+-    ):
+-        raise ValueError("Source-only baseline does not use identical test cuts/labels")
++    prefix_csv = pd.read_csv(args.prefix_dir / "c6_suffix_predictions.csv")
++    for name, frame in (("source-only", old_csv), ("prefix-unlabeled", prefix_csv)):
++        if frame["cut_index"].astype(int).tolist() != test_cuts or not np.allclose(
++            frame["true_vb"].to_numpy(), y_true, rtol=0, atol=1e-10
++        ):
++            raise ValueError(f"{name} does not use identical test cuts/labels")
+     old_metrics = metrics(old_csv["true_vb"].to_numpy(), old_csv["pred_vb"].to_numpy())
++    prefix_metrics = metrics(prefix_csv["true_vb"].to_numpy(), prefix_csv["pred_vb"].to_numpy())
+     comparison = {
+-        "source_only": old_metrics, "daregram_prefix_unlabeled": result,
+-        "new_minus_source_only": {key: result[key] - old_metrics[key] for key in result},
++        "source_only": old_metrics,
++        "daregram_prefix_unlabeled": prefix_metrics,
++        "daregram_full_target_unlabeled_transductive": result,
++        "full_minus_source_only": {key: result[key] - old_metrics[key] for key in result},
++        "full_minus_prefix": {key: result[key] - prefix_metrics[key] for key in result},
+         "same_test_cuts_and_labels": True,
+     }
+     (args.out_dir / "comparison.json").write_text(json.dumps(comparison, indent=2), encoding="utf-8")
+-    logging.info("Comparison, new minus source-only: %s", comparison["new_minus_source_only"])
++    logging.info("Comparison, full-target minus source-only: %s", comparison["full_minus_source_only"])
++    logging.info("Comparison, full-target minus prefix-unlabeled: %s", comparison["full_minus_prefix"])
+     fig, ax = plt.subplots(figsize=(10, 4.5))
+     ax.plot(test_cuts, y_true, label="True VB", lw=1.8)
+     ax.plot(test_cuts, y_pred, label="Predicted VB", lw=1.5)
+     ax.set(xlabel="C6 cut index", ylabel="VB",
+-           title="C1+C4 to C6 suffix: ResNet source-only + DARE-GRAM(prefix-unlabeled)")
++           title="C1+C4 to C6 suffix: transductive DARE-GRAM(full-target-unlabeled)")
+     ax.grid(alpha=0.25)
+     ax.legend()
+     fig.tight_layout()
