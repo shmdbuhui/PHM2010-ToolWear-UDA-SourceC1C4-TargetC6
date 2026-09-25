@@ -1,9 +1,9 @@
-"""Exploratory OOR-PGA-like postprocessing of frozen six-direction ResNet runs.
+"""Exploratory OOR-PGA and PGA-like postprocessing of frozen ResNet runs.
 
 Uses source labels and unlabeled source/target STFT only until predictions are
 written. Target labels enter solely in the subsequent evaluation phase.
-This is a transfer of the EEMD OOR-PGA-like *mechanism*, not its 43-feature
-threshold calibration or its independently trained XGBoost baseline.
+These transfer EEMD mechanisms, not its 43-feature threshold calibration or
+its independently trained XGBoost baseline.
 """
 
 from __future__ import annotations
@@ -85,7 +85,8 @@ def score_and_increment(source_features: np.ndarray, target_features: np.ndarray
     rate = ((target_features < lower) | (target_features > upper)).mean(axis=1)
     gate = np.clip((rate - tl) / (th - tl), 0.0, 1.0)
     tau = (CUTS - 1) / 314.0
-    slope, _, _, _ = theilslopes(wear, tau)
+    # EEMD PGA-like uses a source-only least-squares linear trend.
+    slope, _ = np.polyfit(tau, wear, 1)
     # Do not create a negative "anti-wear" correction from a noisy source fit.
     increment = np.full(315, max(0.0, float(slope)) / 314.0)
     increment[0] = 0.0
