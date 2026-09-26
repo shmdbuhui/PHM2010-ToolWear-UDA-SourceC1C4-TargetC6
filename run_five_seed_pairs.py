@@ -18,6 +18,7 @@ from scipy.stats import t as student_t
 from torch.utils.data import DataLoader, TensorDataset
 
 import run_single_source_pairs as base
+from trend_physics import trend_loss
 from models.DAREGRAM import Trainset as DAREGRAM
 
 
@@ -176,7 +177,10 @@ def ensure_preserved(preserved):
         raise RuntimeError(f"Previous single-run artifacts changed: {changed}")
 
 
-def train(method, x_source, y_source, x_target, source, target, seed, pair_dir, device):
+def train(method, x_source, y_source, x_target, source, target, seed, pair_dir, device,
+          trend_lambda=0.0, trend_delta=0.0):
+    if trend_lambda < 0 or trend_delta < 0 or not np.isfinite([trend_lambda, trend_delta]).all():
+        raise ValueError("Trend weight and delta must be finite and nonnegative")
     model, init_hash = base.build_model(seed, device)
     source_loader = DataLoader(
         TensorDataset(torch.from_numpy(x_source), torch.from_numpy(y_source), torch.arange(1, 316)),
@@ -197,6 +201,7 @@ def train(method, x_source, y_source, x_target, source, target, seed, pair_dir, 
     handler = logging.FileHandler(method_dir / "run.log", encoding="utf-8")
     logging.getLogger().addHandler(handler)
     orders = []
+    epoch_records = []
     target_usage = set()
     try:
         logging.info("Start %s %s->%s seed=%d init_sha256=%s", method, source, target, seed, init_hash)
@@ -205,14 +210,18 @@ def train(method, x_source, y_source, x_target, source, target, seed, pair_dir, 
             target_iter = iter(target_loader) if target_loader is not None else None
             source_order = []
             epoch_target = set()
-            mse_sum = gram_sum = 0.0
+            mse_sum = gram_sum = trend_source_sum = trend_target_sum = total_sum = 0.0
+            weighted_trend_sum = trend_grad_sum = 0.0
+            trend_grad_active_steps = 0
+            source_pairs = target_pairs = 0
             tradeoff = 2 / (1 + math.exp(-10 * (epoch - 1) / (EPOCHS - 1))) - 1
             for xb, yb, source_cuts in source_loader:
                 source_order.extend(source_cuts.tolist())
                 xb, yb = xb.to(device), yb.to(device).unsqueeze(1)
                 optimizer.zero_grad()
                 feat_s = model.feature_extractor(xb)
-                source_mse = F.mse_loss(model.regressor(feat_s), yb)
+                pred_s = model.regressor(feat_s)
+                source_mse = F.mse_loss(pred_s, yb)
                 loss = source_mse
                 if target_iter is not None:
                     xt, target_cuts = next(target_iter)
@@ -221,6 +230,31 @@ def train(method, x_source, y_source, x_target, source, target, seed, pair_dir, 
                     gram = DAREGRAM.DARE_GRAM_LOSS(type("Device", (), {"device": device})(), feat_s, feat_t)
                     loss = loss + tradeoff * gram
                     gram_sum += gram.item()
+                if trend_lambda > 0:
+                    source_trend, n_source = trend_loss(pred_s, [source] * len(source_cuts),
+                                                        source_cuts.tolist(), trend_delta)
+                    source_pairs += n_source
+                    parts = [source_trend] if n_source else []
+                    trend_source_sum += source_trend.item()
+                    if target_iter is not None:
+                        pred_t = model.regressor(feat_t)
+                        target_trend, n_target = trend_loss(pred_t,
+                                                           [target] * len(target_cuts),
+                                                           target_cuts.tolist(), trend_delta)
+                        target_pairs += n_target
+                        trend_target_sum += target_trend.item()
+                        if n_target:
+                            parts.append(target_trend)
+                    if parts:
+                        weighted_trend = trend_lambda * torch.stack(parts).mean()
+                        trend_grad = torch.autograd.grad(weighted_trend, model.regressor[-1].weight,
+                                                         retain_graph=True, allow_unused=True)[0]
+                        grad_norm = 0.0 if trend_grad is None else float(trend_grad.norm().item())
+                        trend_grad_sum += grad_norm
+                        trend_grad_active_steps += int(grad_norm > 0)
+                        weighted_trend_sum += weighted_trend.item()
+                        loss = loss + weighted_trend
+                total_sum += loss.item()
                 loss.backward()
                 optimizer.step()
                 mse_sum += source_mse.item()
@@ -231,11 +265,27 @@ def train(method, x_source, y_source, x_target, source, target, seed, pair_dir, 
             target_usage.update(epoch_target)
             order_hash = hashlib.sha256(np.asarray(source_order, dtype=np.int32).tobytes()).hexdigest()
             orders.append(order_hash)
+            epoch_records.append({"epoch": epoch, "supervised_mse": mse_sum / len(source_loader),
+                                  "domain_gram": gram_sum / len(source_loader),
+                                  "domain_weight": tradeoff if target_iter is not None else 0.0,
+                                  "source_trend_loss": trend_source_sum / len(source_loader),
+                                  "target_trend_loss": trend_target_sum / len(source_loader),
+                                  "source_valid_pairs": source_pairs, "target_valid_pairs": target_pairs,
+                                  "trend_weight": trend_lambda,
+                                  "weighted_trend_loss": weighted_trend_sum / len(source_loader),
+                                  "trend_grad_norm_regressor_weight": trend_grad_sum / len(source_loader),
+                                  "trend_grad_active_steps": trend_grad_active_steps,
+                                  "total_loss": total_sum / len(source_loader)})
             logging.info("%s epoch=%d/%d source_MSE=%.6f gram=%.6f source_order_sha256=%s target_unique=%d",
                          method, epoch, EPOCHS, mse_sum / len(source_loader), gram_sum / len(source_loader),
                          order_hash, len(epoch_target))
+            logging.info("%s trend epoch=%d source=%.6f pairs=%d target=%.6f pairs=%d weight=%.6f total=%.6f",
+                         method, epoch, trend_source_sum / len(source_loader), source_pairs,
+                         trend_target_sum / len(source_loader), target_pairs, trend_lambda,
+                         total_sum / len(source_loader))
         ckpt = method_dir / "final.pth"
         torch.save({"model": model.state_dict(), "epoch": EPOCHS}, ckpt)
+        pd.DataFrame(epoch_records).to_csv(method_dir / "epoch_losses.csv", index=False)
         logging.info("Saved final epoch checkpoint: %s", ckpt)
     finally:
         logging.getLogger().removeHandler(handler)
@@ -245,7 +295,8 @@ def train(method, x_source, y_source, x_target, source, target, seed, pair_dir, 
             torch.cuda.empty_cache()
     return {"initial_model_sha256": init_hash, "source_order_sha256_by_epoch": orders,
             "source_order_sha256_all_epochs": hashlib.sha256("".join(orders).encode()).hexdigest(),
-            "actual_unlabeled_target_cuts": sorted(target_usage), "checkpoint_sha256": base.file_hash(ckpt)}
+            "actual_unlabeled_target_cuts": sorted(target_usage), "checkpoint_sha256": base.file_hash(ckpt),
+            "epoch_losses": epoch_records}
 
 
 def predict(method, x_target, cuts, seed, pair_dir, device):

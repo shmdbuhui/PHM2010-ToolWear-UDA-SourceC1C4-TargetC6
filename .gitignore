@@ -240,3 +240,15 @@ artifacts/late_underestimation_extrapolation_zscore_20260925/
 artifacts/oor_pga_factor_diagnosis_full_1_315_20260925/
 artifacts/oor_pga_full_1_315_zscore_20260925/
 artifacts/stage_error_analysis_zscore_20260925/
+
+# Local experiment outputs (plots, predictions, logs and checkpoints).
+# The corresponding runner, audit and report scripts remain versioned.
+artifacts/c1_c6_distribution_diagnostic_20260926_final/
+artifacts/cod_comparison_20260926/
+artifacts/monotone_pava_delta0_full_1_315_20260926/
+artifacts/multi_window_25_50_75_20260926/
+artifacts/selected_checkpoint_feature_audit_20260926/
+artifacts/six_direction_domain_diagnostic_20260926/
+artifacts/stft_amplitude_ablation_20260926/
+artifacts/trend_physics_full_1_315_20260925/
+artifacts/trend_physics_lambda0_smoke_20260925/
