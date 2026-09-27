@@ -252,3 +252,12 @@ artifacts/six_direction_domain_diagnostic_20260926/
 artifacts/stft_amplitude_ablation_20260926/
 artifacts/trend_physics_full_1_315_20260925/
 artifacts/trend_physics_lambda0_smoke_20260925/
+artifacts/historical_next_cut_seed42_20260926/
+artifacts/local_five_pred_current_extrapolation_c1_c6_seed42_20260926/
+
+# Other dated local experiment runs from September 26. Existing tracked files
+# remain tracked; this keeps newly generated checkpoints and diagnostics local.
+artifacts/*_20260926*/
+
+# Internal source-access audit note, separate from runnable experiments.
+IGSM_SOURCE_AUDIT.md
