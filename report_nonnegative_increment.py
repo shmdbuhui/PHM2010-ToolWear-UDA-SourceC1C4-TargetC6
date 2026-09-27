@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 from pathlib import Path
+import json
 
 import numpy as np
 import pandas as pd
@@ -11,18 +12,106 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-from run_nonnegative_increment import DEFAULT_OUT, GROUPS, pairs
+from run_nonnegative_increment import DEFAULT_OUT, pairs, sha
 
 
 BASELINE = Path("artifacts/full_1_315_baseline_zscore_20260925/per_seed_metrics_full_1_315.csv")
 RIDGE = Path("artifacts/frozen_ridge_probe_audit_20260926/target_metrics.csv")
+PAVA_SCORED = Path("artifacts/f0_pava_offline_20260926/per_seed_scored")
+
+
+def render_direction_plots(out):
+    """Redraw true VB and the saved five-seed F0+PAVA mean only."""
+    plot_dir = out / "plots"
+    plot_dir.mkdir(exist_ok=True)
+    manifest_path = plot_dir / "manifest.json"
+    previous = ({row["direction"]: row for row in json.loads(manifest_path.read_text(encoding="utf-8"))}
+                if manifest_path.exists() else {})
+    records = []
+    for source, target, _ in pairs()[::5]:
+        direction = f"{source}_to_{target}"
+        truth = None
+        predictions = []
+        for seed in range(42, 47):
+            path = PAVA_SCORED / f"{direction}_seed_{seed}.csv"
+            frame = pd.read_csv(path, usecols=["cut_index", "true_vb", "pava_pred"])
+            if frame.cut_index.tolist() != list(range(1, 316)):
+                raise ValueError(f"Incomplete cut range: {path}")
+            values = frame[["true_vb", "pava_pred"]].to_numpy(float)
+            if not np.isfinite(values).all():
+                raise ValueError(f"Nonfinite curve: {path}")
+            if truth is None:
+                truth = values[:, 0]
+            elif not np.array_equal(truth, values[:, 0]):
+                raise ValueError(f"True VB differs across seeds: {path}")
+            predictions.append(values[:, 1])
+        predicted = np.mean(np.stack(predictions), axis=0)
+        if direction in previous:
+            if previous[direction]["xlim"] != [1, 315]:
+                raise ValueError(f"Previous x limits changed: {direction}")
+            low, high = previous[direction]["ylim"]
+        else:
+            low = float(min(truth.min(), predicted.min()))
+            high = float(max(truth.max(), predicted.max()))
+            pad = max((high - low) * .05, 1.0)
+            low, high = low - pad, high + pad
+        if min(truth.min(), predicted.min()) < low or max(truth.max(), predicted.max()) > high:
+            raise ValueError(f"Existing y limits would clip a curve: {direction}")
+        fig, ax = plt.subplots(figsize=(9, 6.6))
+        ax.set_box_aspect(0.70)
+        ax.plot(range(1, 316), truth, color="black", linewidth=2, label="True VB")
+        ax.plot(range(1, 316), predicted, color="#d04b3f", linewidth=1.55, label="F0 + PAVA")
+        ax.set_xlim(1, 315)
+        ax.set_ylim(low, high)
+        ax.set_title(f"{source.upper()}→{target.upper()}")
+        ax.set_xlabel("Cut index")
+        ax.set_ylabel("VB")
+        ax.grid(alpha=.2)
+        handles, labels = ax.get_legend_handles_labels()
+        if len(handles) != 2:
+            raise AssertionError("Expected exactly two plotted curves")
+        fig.legend(handles, labels, loc="upper center", ncol=2)
+        fig.subplots_adjust(left=.11, right=.97, bottom=.12, top=.88)
+        fig.canvas.draw()
+        box = ax.get_window_extent(fig.canvas.get_renderer())
+        box_width_height_ratio = float(box.width / box.height)
+        if not 1.38 <= box_width_height_ratio <= 1.48:
+            raise AssertionError(f"Wrong axes box aspect: {box_width_height_ratio}")
+        name = f"{source.upper()}_to_{target.upper()}.png"
+        destination = plot_dir / name
+        fig.savefig(destination, dpi=170)
+        plt.close(fig)
+        records.append({"direction": direction, "path": str(destination.resolve()),
+                        "sha256": sha(destination), "axes_width_height_ratio": box_width_height_ratio,
+                        "xlim": [1, 315], "ylim": [low, high],
+                        "curves": ["True VB", "F0 + PAVA"]})
+    if len(records) != 6:
+        raise AssertionError("Expected exactly six independent direction figures")
+    (plot_dir / "six_directions.png").unlink(missing_ok=True)
+    manifest_path.write_text(json.dumps(records, indent=2) + "\n", encoding="utf-8")
+    return records
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
+    parser.add_argument("--plots-only", action="store_true", help="Redraw six figures without recalculating metrics")
     args = parser.parse_args()
     out = args.out
+    if args.plots_only:
+        render_direction_plots(out)
+        readme = out / "README.md"
+        old_line = "- `plots/six_directions.png`: five-seed mean primary curves with one standard deviation bands."
+        prior_line = "- `plots/C1_to_C4.png` through `plots/C6_to_C4.png`: six separate five-seed mean primary-curve figures with one standard deviation bands."
+        new_line = "- `plots/C1_to_C4.png` through `plots/C6_to_C4.png`: six separate True VB and five-seed mean F0 + PAVA figures."
+        content = readme.read_text(encoding="utf-8")
+        if old_line in content:
+            readme.write_text(content.replace(old_line, new_line), encoding="utf-8")
+        elif prior_line in content:
+            readme.write_text(content.replace(prior_line, new_line), encoding="utf-8")
+        elif new_line not in content:
+            raise ValueError("Unexpected README plot description")
+        return
     metrics = pd.read_csv(out / "per_seed_metrics.csv")
     curves = pd.read_csv(out / "target_predictions_scored.csv")
     increments = pd.read_csv(out / "increment_distribution.csv")
@@ -100,30 +189,7 @@ def main():
     if physical[physical.curve == "c_vb"].decline_count.ne(0).any():
         raise AssertionError("Cumulative head has negative step")
 
-    (out / "plots").mkdir(exist_ok=True)
-    colors = {"F0": "#4c78a8", "F1": "#f58518", "F2": "#54a24b", "F3": "#b279a2"}
-    fig, axes = plt.subplots(2, 3, figsize=(15, 8), sharex=True)
-    for ax, (source, target, _) in zip(axes.flat, pairs()[::5]):
-        subset = curves[(curves.source == source) & (curves.target == target) & curves.curve.eq(
-            curves.group.map({"F0": "p_vb", "F1": "p_vb", "F2": "c_vb", "F3": "c_vb"}))]
-        truth = subset[subset.seed == 42].drop_duplicates("cut_index").sort_values("cut_index")
-        ax.plot(truth.cut_index, truth.true_vb, color="black", linewidth=2, label="True VB")
-        for group in GROUPS:
-            view = subset[subset.group == group]
-            matrix = view.pivot(index="cut_index", columns="seed", values="pred_vb").to_numpy(float)
-            mean = matrix.mean(axis=1)
-            std = matrix.std(axis=1, ddof=1)
-            ax.plot(range(1, 316), mean, color=colors[group], label=group)
-            ax.fill_between(range(1, 316), mean - std, mean + std, color=colors[group], alpha=.12)
-        ax.set_title(f"{source.upper()}→{target.upper()}")
-        ax.set_xlabel("Cut index")
-        ax.set_ylabel("VB")
-        ax.grid(alpha=.2)
-    handles, labels = axes.flat[0].get_legend_handles_labels()
-    fig.legend(handles, labels, loc="upper center", ncol=5)
-    fig.tight_layout(rect=(0, 0, 1, .94))
-    fig.savefig(out / "plots" / "six_directions.png", dpi=170)
-    plt.close(fig)
+    render_direction_plots(out)
 
     lines = ["# Nonnegative increment experiment", "",
              "Six directed transfers × seeds 42–46 × F0–F3; all target cuts 1–315.",
@@ -150,7 +216,7 @@ def main():
               "- `physical_curve_audit.csv`: decline counts, late prediction and truth slopes.",
               "- `paired_reference_comparison.csv`, `direction_reference_summary.csv`: paired seed comparisons with F0, source-only, DARE original and DARE+Ridge.",
               "- `target_predictions_scored.csv`: both direct and cumulative curves with target wear, read only after lock.",
-              "- `plots/six_directions.png`: five-seed mean primary curves with one standard deviation bands.",
+              "- `plots/C1_to_C4.png` through `plots/C6_to_C4.png`: six separate True VB and five-seed mean F0 + PAVA figures.",
               ""]
     (out / "README.md").write_text("\n".join(lines), encoding="utf-8")
 

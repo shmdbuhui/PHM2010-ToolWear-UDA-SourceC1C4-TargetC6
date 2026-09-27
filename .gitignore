@@ -258,6 +258,7 @@ artifacts/local_five_pred_current_extrapolation_c1_c6_seed42_20260926/
 # Other dated local experiment runs from September 26. Existing tracked files
 # remain tracked; this keeps newly generated checkpoints and diagnostics local.
 artifacts/*_20260926*/
+artifacts/f0_phys_pava_oor_pga_c1c6_20260927/
 
 # Internal source-access audit note, separate from runnable experiments.
 IGSM_SOURCE_AUDIT.md
